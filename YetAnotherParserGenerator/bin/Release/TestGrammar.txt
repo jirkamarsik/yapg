@@ -1,0 +1,171 @@
+﻿%null NULL
+
+(?im)
+
+ASSIGN=:=
+COLON=:
+SEMICOLON=;
+COMMA=,
+DOUBLESTOP=\.\.
+STOP=\.
+CARET=\^
+PLUS=\+
+MINUS=\-
+TIMES=\*
+DIVIDEDBY=/
+EQ==
+NE=\<\>
+GE=\>=
+GT=\>
+LE=\<=
+LT=\<
+LPAREN=\(
+RPAREN=\)
+LBRACKET=\[
+RBRACKET=\]
+AND=and\b
+ARRAY=array\b
+BEGIN=begin\b
+CONST=const\b
+DIV=div\b
+DO=do\b
+DOWNTO=downto\b
+ELSE=else\b
+END=end\b
+FILE=file\b
+FOR=for\b
+FUNCTION=function\b
+IF=if\b
+MOD=mod\b
+NIL=nil\b
+NOT=not\b
+OF=of\b
+OR=or\b
+PROCEDURE=procedure\b
+PROGRAM=program\b
+RECORD=record\b
+REPEAT=repeat\b
+SHL=shl\b
+SHR=shr\b
+THEN=then\b
+TO=to\b
+TYPE=type\b
+UNTIL=until\b
+VAR=var\b
+WHILE=while\b
+XOR=xor\b
+IDENTIFIER=[a-z_]\w*
+INTEGER=[0-9]+
+REAL=[0-9]+(\.[0-9]+)?([EL][0-9]+)?
+STRING="(("")|[^"])*"
+STRING='(('')|[^'])*'
+CHAR="(("")|[^"])"
+CHAR='(('')|[^'])'
+PREPROC=\{[A-Z][\+\-]\}
+NULL=\s+
+#víceřádkové komentáře
+NULL=\{(.|\n|\r)*?\}
+#jednořádkové komentáře
+NULL=//.*
+
+%start pascalProgram
+
+<pascalProgram> ::= <header> <definitions> <main>;
+<header> ::= PROGRAM IDENTIFIER SEMICOLON | ;
+
+<definitions> ::= <definition> <definitions> | ;
+<definition> ::= <constants> | <variables> | <types> | <function> | <procedure> | <preprocessor>;
+
+<preprocessor> ::= PREPROC;
+
+<constants> ::= CONST <constantList>;
+<constantList> ::= <constant> | <constant> <constantList>;
+<constant> ::= IDENTIFIER COLON <type> EQ <expression> SEMICOLON;
+
+<variables> ::= VAR <variableDefs>;
+<variableDefs> ::= <variableDef> | <variableDef> <variableDefs>;
+<variableDef> ::= <identifierCommaList> COLON <type> SEMICOLON;
+<identifierCommaList> ::= IDENTIFIER | IDENTIFIER COMMA <identifierCommaList>;
+
+<types> ::= TYPE <typeDefs>;
+<typeDefs> ::= <typeDef> | <typeDef> <typeDefs>;
+<typeDef> ::= IDENTIFIER EQ <type>;
+
+<type> ::= IDENTIFIER;
+<type> ::= ARRAY OF <type> | ARRAY LBRACKET <ordinalIntervals> RBRACKET OF <type>;
+<type> ::= RECORD <memberDefs> END SEMICOLON;
+<type> ::= CARET <type>;
+<type> ::= FILE OF <type>;
+
+<ordinalIntervals> ::= <ordinalInterval> | <ordinalInterval> COMMA <ordinalIntervals>;
+<ordinalInterval> ::= INTEGER DOUBLESTOP INTEGER | 
+		      CHAR DOUBLESTOP CHAR | 
+		      IDENTIFIER DOUBLESTOP IDENTIFIER;
+
+<memberDefs> ::= <memberDef> | <memberDef> <memberDefs>;
+<memberDef> ::= <identifierCommaList> COLON <type> SEMICOLON;
+
+
+<function> ::= <functionHeader> <variables> <subroutineBody> | <functionHeader> <subroutineBody>;
+<functionHeader> ::= FUNCTION IDENTIFIER <arguments> COLON <type> SEMICOLON;
+<subroutineBody> ::= BEGIN <statementList> END SEMICOLON;
+<arguments> ::= LPAREN <argumentDefs> RPAREN | ;
+<argumentDefs> ::= <nonemptyArgumentDefs> | ;
+<nonemptyArgumentDefs> ::= <argumentDef> SEMICOLON <nonemptyArgumentDefs> | <argumentDef>;
+<argumentDef> ::= VAR <identifierCommaList> COLON <type> | <identifierCommaList> COLON <type>;
+
+<procedure> ::= <procedureHeader> <variables> <subroutineBody> | <procedureHeader> <subroutineBody>;
+<procedureHeader> ::= PROCEDURE IDENTIFIER <arguments> SEMICOLON;
+
+
+<main> ::= BEGIN <statementList> END STOP;
+
+<statementList> ::= <statement> | <statement> SEMICOLON <statementList>;
+
+<statement> ::= | BEGIN <statementList> END | <functionCall> | <assignment> | <whileStatement> | 
+		<repeatStatement> | <forStatement> | <ifStatement>;
+
+<functionCall> ::= IDENTIFIER LPAREN <expressionCommaList> RPAREN | IDENTIFIER;
+<expressionCommaList> ::= <nonemptyExpressionCommaList> | ;
+<nonemptyExpressionCommaList> ::= <expression> | <expression> COMMA <nonemptyExpressionCommaList>;
+
+<assignment> ::= <variableRef> ASSIGN <expression>;
+
+<ifStatement> ::= IF <expression> THEN <statement> |
+		  IF <expression> THEN <statement> ELSE <statement>;
+
+<whileStatement> ::= WHILE <expression> DO BEGIN <statementList> END;
+<repeatStatement> ::= REPEAT <statementList> UNTIL <expression>;
+
+<forStatement> ::= FOR <variableRef> ASSIGN <expression> TO <expression> DO <statement> |
+                   FOR <variableRef> ASSIGN <expression> DOWNTO <expression> DO <statement>;
+
+#výrazy a přednosti operátorů v nich, převážně přejato z http://pascal.comsci.us/
+<expression> ::= <simpleExpression> | <relationalExpression>;
+<relationalExpression> ::= <simpleExpression> <relationalOperator> <simpleExpression>;
+<simpleExpression> ::= <term> <additiveOperator> <simpleExpression> | <term>;
+<term> ::= <factor> <multiplicativeOperator> <term> | <factor>;
+<factor> ::= <computedValue> | 
+	     <literal> | 
+	     <unaryExpression> |
+	     LPAREN <expression> RPAREN;
+<unaryExpression> ::= <unaryOperator> <factor>;
+
+<computedValue> ::= <simpleValue> <qualifiers>;
+#simpleValue bych nejraději rozepsal na functionCall a IDENTIFIER (odkazy na proměnné),
+#vynořila by se před náma ale Pascalovská nejednoznačnost, kdy nemůžeme ze syntaktické
+#analýzy usoudit, zda je v daném výrazu odkazováno na proměnnou anebo volána bezparametrická
+#funkce stejného jména. Proto zde opakuji pravou stranu jako u functionCall a neodvolávám
+#se na pravidlo functionCall, protože se klidně může jednat o proměnnou
+<simpleValue> ::= IDENTIFIER LPAREN <expressionCommaList> RPAREN | IDENTIFIER;
+<qualifiers> ::= CARET <qualifiers> | STOP IDENTIFIER <qualifiers> |
+		 LBRACKET <nonemptyExpressionCommaList> RBRACKET | ;
+
+<additiveOperator> ::= PLUS | MINUS | OR | XOR;
+<multiplicativeOperator> ::= TIMES | DIVIDEDBY | DIV | MOD | SHL | SHR | AND;
+<relationalOperator> ::= EQ | NE | LT| LE | GE | GT;
+<sign> ::= PLUS | MINUS;
+<unaryOperator> ::= <sign> | NOT;
+
+<literal> ::= STRING | CHAR | INTEGER | REAL | NIL;
+<variableRef> ::= IDENTIFIER <qualifiers>;

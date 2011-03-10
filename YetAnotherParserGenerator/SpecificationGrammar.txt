@@ -1,0 +1,33 @@
+﻿%null VOID
+
+(?m)
+
+DERIVES=::=
+OR=\|
+LANGLE=\<
+RANGLE=\>
+SEMICOLON=;
+REGEXOPTS=\(\?[imnsx\-]+\)
+NULL=(?i)%null\b
+START=(?i)%start\b
+TOKENDEF=\w+=[^\r\n]*
+IDENTIFIER=\w+
+VOID=\s+
+VOID=#.*
+
+%start grammarDef
+
+<grammarDef> ::= <nullDef> <regexOpts> <tokenDefs> <startDef> <rules>;
+
+<nullDef> ::= NULL IDENTIFIER | ;
+<regexOpts> ::= REGEXOPTS | ; 
+<tokenDefs> ::= TOKENDEF | TOKENDEF <tokenDefs>;
+<startDef> ::= START IDENTIFIER;
+
+<rules> ::= <rule> | <rule> <rules>;
+<rule> ::= <nonterminal> DERIVES <expression> SEMICOLON;
+<expression> ::= <symbolList> | <symbolList> OR <expression>;
+<symbolList> ::= <symbol> <symbolList> | ;
+<symbol> ::= <nonterminal> | <terminal>;
+<nonterminal> ::= LANGLE IDENTIFIER RANGLE;
+<terminal> ::= IDENTIFIER;

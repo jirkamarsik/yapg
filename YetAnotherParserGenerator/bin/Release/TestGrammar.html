@@ -1,0 +1,2511 @@
+<html>
+<body>
+<h2>Parser states</h2>
+<b>States with inconsistencies:</b> <a href="#State25">25</a>
+<a name="State0" id="State0"/><h3>State 0</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;header&gt; ::= ·<br>
+{BEGIN, CONST, FUNCTION, PROCEDURE, TYPE, VAR, PREPROC}</li>
+<li>&lt;$start&gt; ::= · &lt;pascalProgram&gt; $end</li>
+<li>&lt;pascalProgram&gt; ::= · &lt;header&gt; &lt;definitions&gt; &lt;main&gt;</li>
+<li>&lt;header&gt; ::= · PROGRAM IDENTIFIER SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <br>
+<b>Transitions:</b> <a href="#State1">1</a>(&lt;pascalProgram&gt;), <a href="#State3">3</a>(&lt;header&gt;), <a href="#State230">230</a>(PROGRAM)<br>
+<a name="State1" id="State1"/><h3>State 1</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;$start&gt; ::= &lt;pascalProgram&gt; · $end</li>
+</ul>
+<b>Accessing states:</b> <a href="#State0">0</a><br>
+<b>Transitions:</b> <a href="#State2">2</a>($end)<br>
+<a name="State2" id="State2"/><h3>State 2</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;$start&gt; ::= &lt;pascalProgram&gt; $end ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State1">1</a><br>
+<b>Transitions:</b> <br>
+<a name="State3" id="State3"/><h3>State 3</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;definitions&gt; ::= ·<br>
+{BEGIN}</li>
+<li>&lt;pascalProgram&gt; ::= &lt;header&gt; · &lt;definitions&gt; &lt;main&gt;</li>
+<li>&lt;definitions&gt; ::= · &lt;definition&gt; &lt;definitions&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;constants&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;variables&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;types&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;function&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;procedure&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;preprocessor&gt;</li>
+<li>&lt;preprocessor&gt; ::= · PREPROC</li>
+<li>&lt;procedure&gt; ::= · &lt;procedureHeader&gt; &lt;variables&gt; &lt;subroutineBody&gt;</li>
+<li>&lt;procedure&gt; ::= · &lt;procedureHeader&gt; &lt;subroutineBody&gt;</li>
+<li>&lt;procedureHeader&gt; ::= · PROCEDURE IDENTIFIER &lt;arguments&gt; SEMICOLON</li>
+<li>&lt;function&gt; ::= · &lt;functionHeader&gt; &lt;variables&gt; &lt;subroutineBody&gt;</li>
+<li>&lt;function&gt; ::= · &lt;functionHeader&gt; &lt;subroutineBody&gt;</li>
+<li>&lt;functionHeader&gt; ::= · FUNCTION IDENTIFIER &lt;arguments&gt; COLON &lt;type&gt; SEMICOLON</li>
+<li>&lt;types&gt; ::= · TYPE &lt;typeDefs&gt;</li>
+<li>&lt;variables&gt; ::= · VAR &lt;variableDefs&gt;</li>
+<li>&lt;constants&gt; ::= · CONST &lt;constantList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State0">0</a><br>
+<b>Transitions:</b> <a href="#State4">4</a>(&lt;definitions&gt;), <a href="#State121">121</a>(&lt;definition&gt;), <a href="#State123">123</a>(&lt;constants&gt;), <a href="#State124">124</a>(&lt;variables&gt;), <a href="#State125">125</a>(&lt;types&gt;), <a href="#State126">126</a>(&lt;function&gt;), <a href="#State127">127</a>(&lt;procedure&gt;), <a href="#State128">128</a>(&lt;preprocessor&gt;), <a href="#State129">129</a>(PREPROC), <a href="#State130">130</a>(&lt;procedureHeader&gt;), <a href="#State185">185</a>(PROCEDURE), <a href="#State203">203</a>(&lt;functionHeader&gt;), <a href="#State207">207</a>(FUNCTION), <a href="#State213">213</a>(TYPE), <a href="#State138">138</a>(VAR), <a href="#State220">220</a>(CONST)<br>
+<a name="State4" id="State4"/><h3>State 4</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;pascalProgram&gt; ::= &lt;header&gt; &lt;definitions&gt; · &lt;main&gt;</li>
+<li>&lt;main&gt; ::= · BEGIN &lt;statementList&gt; END STOP</li>
+</ul>
+<b>Accessing states:</b> <a href="#State3">3</a><br>
+<b>Transitions:</b> <a href="#State5">5</a>(&lt;main&gt;), <a href="#State6">6</a>(BEGIN)<br>
+<a name="State5" id="State5"/><h3>State 5</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;pascalProgram&gt; ::= &lt;header&gt; &lt;definitions&gt; &lt;main&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State4">4</a><br>
+<b>Transitions:</b> <br>
+<a name="State6" id="State6"/><h3>State 6</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= ·<br>
+{SEMICOLON, END}</li>
+<li>&lt;main&gt; ::= BEGIN · &lt;statementList&gt; END STOP</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt;</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt; SEMICOLON &lt;statementList&gt;</li>
+<li>&lt;statement&gt; ::= · BEGIN &lt;statementList&gt; END</li>
+<li>&lt;statement&gt; ::= · &lt;functionCall&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;assignment&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;whileStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;repeatStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;forStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;ifStatement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;repeatStatement&gt; ::= · REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;whileStatement&gt; ::= · WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;assignment&gt; ::= · &lt;variableRef&gt; ASSIGN &lt;expression&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State4">4</a><br>
+<b>Transitions:</b> <a href="#State7">7</a>(&lt;statementList&gt;), <a href="#State10">10</a>(&lt;statement&gt;), <a href="#State13">13</a>(BEGIN), <a href="#State16">16</a>(&lt;functionCall&gt;), <a href="#State17">17</a>(&lt;assignment&gt;), <a href="#State18">18</a>(&lt;whileStatement&gt;), <a href="#State19">19</a>(&lt;repeatStatement&gt;), <a href="#State20">20</a>(&lt;forStatement&gt;), <a href="#State21">21</a>(&lt;ifStatement&gt;), <a href="#State22">22</a>(IF), <a href="#State28">28</a>(FOR), <a href="#State36">36</a>(REPEAT), <a href="#State102">102</a>(WHILE), <a href="#State108">108</a>(&lt;variableRef&gt;), <a href="#State111">111</a>(IDENTIFIER)<br>
+<a name="State7" id="State7"/><h3>State 7</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;main&gt; ::= BEGIN &lt;statementList&gt; · END STOP</li>
+</ul>
+<b>Accessing states:</b> <a href="#State6">6</a><br>
+<b>Transitions:</b> <a href="#State8">8</a>(END)<br>
+<a name="State8" id="State8"/><h3>State 8</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;main&gt; ::= BEGIN &lt;statementList&gt; END · STOP</li>
+</ul>
+<b>Accessing states:</b> <a href="#State7">7</a><br>
+<b>Transitions:</b> <a href="#State9">9</a>(STOP)<br>
+<a name="State9" id="State9"/><h3>State 9</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;main&gt; ::= BEGIN &lt;statementList&gt; END STOP ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State8">8</a><br>
+<b>Transitions:</b> <br>
+<a name="State10" id="State10"/><h3>State 10</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statementList&gt; ::= &lt;statement&gt; ·<br>
+{END, UNTIL}</li>
+<li>&lt;statementList&gt; ::= &lt;statement&gt; · SEMICOLON &lt;statementList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State11">11</a>, <a href="#State13">13</a>, <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <a href="#State11">11</a>(SEMICOLON)<br>
+<a name="State11" id="State11"/><h3>State 11</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= ·<br>
+{SEMICOLON, ELSE, END, UNTIL}</li>
+<li>&lt;statementList&gt; ::= &lt;statement&gt; SEMICOLON · &lt;statementList&gt;</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt;</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt; SEMICOLON &lt;statementList&gt;</li>
+<li>&lt;statement&gt; ::= · BEGIN &lt;statementList&gt; END</li>
+<li>&lt;statement&gt; ::= · &lt;functionCall&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;assignment&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;whileStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;repeatStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;forStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;ifStatement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;repeatStatement&gt; ::= · REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;whileStatement&gt; ::= · WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;assignment&gt; ::= · &lt;variableRef&gt; ASSIGN &lt;expression&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State10">10</a><br>
+<b>Transitions:</b> <a href="#State12">12</a>(&lt;statementList&gt;), <a href="#State10">10</a>(&lt;statement&gt;), <a href="#State13">13</a>(BEGIN), <a href="#State16">16</a>(&lt;functionCall&gt;), <a href="#State17">17</a>(&lt;assignment&gt;), <a href="#State18">18</a>(&lt;whileStatement&gt;), <a href="#State19">19</a>(&lt;repeatStatement&gt;), <a href="#State20">20</a>(&lt;forStatement&gt;), <a href="#State21">21</a>(&lt;ifStatement&gt;), <a href="#State22">22</a>(IF), <a href="#State28">28</a>(FOR), <a href="#State36">36</a>(REPEAT), <a href="#State102">102</a>(WHILE), <a href="#State108">108</a>(&lt;variableRef&gt;), <a href="#State111">111</a>(IDENTIFIER)<br>
+<a name="State12" id="State12"/><h3>State 12</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statementList&gt; ::= &lt;statement&gt; SEMICOLON &lt;statementList&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State11">11</a><br>
+<b>Transitions:</b> <br>
+<a name="State13" id="State13"/><h3>State 13</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= ·<br>
+{SEMICOLON, ELSE, END, UNTIL}</li>
+<li>&lt;statement&gt; ::= BEGIN · &lt;statementList&gt; END</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt;</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt; SEMICOLON &lt;statementList&gt;</li>
+<li>&lt;statement&gt; ::= · BEGIN &lt;statementList&gt; END</li>
+<li>&lt;statement&gt; ::= · &lt;functionCall&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;assignment&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;whileStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;repeatStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;forStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;ifStatement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;repeatStatement&gt; ::= · REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;whileStatement&gt; ::= · WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;assignment&gt; ::= · &lt;variableRef&gt; ASSIGN &lt;expression&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State13">13</a>, <a href="#State26">26</a>, <a href="#State34">34</a>, <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State118">118</a>, <a href="#State24">24</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <a href="#State14">14</a>(&lt;statementList&gt;), <a href="#State10">10</a>(&lt;statement&gt;), <a href="#State13">13</a>(BEGIN), <a href="#State16">16</a>(&lt;functionCall&gt;), <a href="#State17">17</a>(&lt;assignment&gt;), <a href="#State18">18</a>(&lt;whileStatement&gt;), <a href="#State19">19</a>(&lt;repeatStatement&gt;), <a href="#State20">20</a>(&lt;forStatement&gt;), <a href="#State21">21</a>(&lt;ifStatement&gt;), <a href="#State22">22</a>(IF), <a href="#State28">28</a>(FOR), <a href="#State36">36</a>(REPEAT), <a href="#State102">102</a>(WHILE), <a href="#State108">108</a>(&lt;variableRef&gt;), <a href="#State111">111</a>(IDENTIFIER)<br>
+<a name="State14" id="State14"/><h3>State 14</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= BEGIN &lt;statementList&gt; · END</li>
+</ul>
+<b>Accessing states:</b> <a href="#State13">13</a><br>
+<b>Transitions:</b> <a href="#State15">15</a>(END)<br>
+<a name="State15" id="State15"/><h3>State 15</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= BEGIN &lt;statementList&gt; END ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State14">14</a><br>
+<b>Transitions:</b> <br>
+<a name="State16" id="State16"/><h3>State 16</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= &lt;functionCall&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State13">13</a>, <a href="#State26">26</a>, <a href="#State34">34</a>, <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State118">118</a>, <a href="#State24">24</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <br>
+<a name="State17" id="State17"/><h3>State 17</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= &lt;assignment&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State13">13</a>, <a href="#State26">26</a>, <a href="#State34">34</a>, <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State118">118</a>, <a href="#State24">24</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <br>
+<a name="State18" id="State18"/><h3>State 18</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= &lt;whileStatement&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State13">13</a>, <a href="#State26">26</a>, <a href="#State34">34</a>, <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State118">118</a>, <a href="#State24">24</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <br>
+<a name="State19" id="State19"/><h3>State 19</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= &lt;repeatStatement&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State13">13</a>, <a href="#State26">26</a>, <a href="#State34">34</a>, <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State118">118</a>, <a href="#State24">24</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <br>
+<a name="State20" id="State20"/><h3>State 20</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= &lt;forStatement&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State13">13</a>, <a href="#State26">26</a>, <a href="#State34">34</a>, <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State118">118</a>, <a href="#State24">24</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <br>
+<a name="State21" id="State21"/><h3>State 21</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= &lt;ifStatement&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State13">13</a>, <a href="#State26">26</a>, <a href="#State34">34</a>, <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State118">118</a>, <a href="#State24">24</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <br>
+<a name="State22" id="State22"/><h3>State 22</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ifStatement&gt; ::= IF · &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= IF · &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State26">26</a>, <a href="#State34">34</a>, <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State118">118</a>, <a href="#State24">24</a>, <a href="#State13">13</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <a href="#State23">23</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State23" id="State23"/><h3>State 23</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ifStatement&gt; ::= IF &lt;expression&gt; · THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= IF &lt;expression&gt; · THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State22">22</a><br>
+<b>Transitions:</b> <a href="#State24">24</a>(THEN)<br>
+<a name="State24" id="State24"/><h3>State 24</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= ·<br>
+{SEMICOLON, ELSE, END, UNTIL}</li>
+<li>&lt;ifStatement&gt; ::= IF &lt;expression&gt; THEN · &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= IF &lt;expression&gt; THEN · &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;statement&gt; ::= · BEGIN &lt;statementList&gt; END</li>
+<li>&lt;statement&gt; ::= · &lt;functionCall&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;assignment&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;whileStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;repeatStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;forStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;ifStatement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;repeatStatement&gt; ::= · REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;whileStatement&gt; ::= · WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;assignment&gt; ::= · &lt;variableRef&gt; ASSIGN &lt;expression&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State23">23</a><br>
+<b>Transitions:</b> <a href="#State25">25</a>(&lt;statement&gt;), <a href="#State13">13</a>(BEGIN), <a href="#State16">16</a>(&lt;functionCall&gt;), <a href="#State17">17</a>(&lt;assignment&gt;), <a href="#State18">18</a>(&lt;whileStatement&gt;), <a href="#State19">19</a>(&lt;repeatStatement&gt;), <a href="#State20">20</a>(&lt;forStatement&gt;), <a href="#State21">21</a>(&lt;ifStatement&gt;), <a href="#State22">22</a>(IF), <a href="#State28">28</a>(FOR), <a href="#State36">36</a>(REPEAT), <a href="#State102">102</a>(WHILE), <a href="#State108">108</a>(&lt;variableRef&gt;), <a href="#State111">111</a>(IDENTIFIER)<br>
+<a name="State25" id="State25"/><h3 style="color:red">State 25</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ifStatement&gt; ::= IF &lt;expression&gt; THEN &lt;statement&gt; ·<br>
+{SEMICOLON, <span style="color:red">ELSE</span>, END, UNTIL}<br>
+(25, &lt;ifStatement&gt; ::= IF &lt;expression&gt; THEN &lt;statement&gt; ·) <b><i>lookback</i></b> (<a href="#State24">24</a>, &lt;ifStatement&gt;) <b><i>includes</i></b> (<a href="#State24">24</a>, &lt;statement&gt;) and {<span style="color:red">ELSE</span>} ⊂ <b>DR</b>(24, &lt;statement&gt;)<br>
+</li>
+<li>&lt;ifStatement&gt; ::= IF &lt;expression&gt; THEN &lt;statement&gt; · <span style="color:red">ELSE</span> &lt;statement&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State24">24</a><br>
+<b>Transitions:</b> <a href="#State26">26</a>(ELSE)<br>
+<a name="State26" id="State26"/><h3>State 26</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= ·<br>
+{SEMICOLON, ELSE, END, UNTIL}</li>
+<li>&lt;ifStatement&gt; ::= IF &lt;expression&gt; THEN &lt;statement&gt; ELSE · &lt;statement&gt;</li>
+<li>&lt;statement&gt; ::= · BEGIN &lt;statementList&gt; END</li>
+<li>&lt;statement&gt; ::= · &lt;functionCall&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;assignment&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;whileStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;repeatStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;forStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;ifStatement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;repeatStatement&gt; ::= · REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;whileStatement&gt; ::= · WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;assignment&gt; ::= · &lt;variableRef&gt; ASSIGN &lt;expression&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State25">25</a><br>
+<b>Transitions:</b> <a href="#State27">27</a>(&lt;statement&gt;), <a href="#State13">13</a>(BEGIN), <a href="#State16">16</a>(&lt;functionCall&gt;), <a href="#State17">17</a>(&lt;assignment&gt;), <a href="#State18">18</a>(&lt;whileStatement&gt;), <a href="#State19">19</a>(&lt;repeatStatement&gt;), <a href="#State20">20</a>(&lt;forStatement&gt;), <a href="#State21">21</a>(&lt;ifStatement&gt;), <a href="#State22">22</a>(IF), <a href="#State28">28</a>(FOR), <a href="#State36">36</a>(REPEAT), <a href="#State102">102</a>(WHILE), <a href="#State108">108</a>(&lt;variableRef&gt;), <a href="#State111">111</a>(IDENTIFIER)<br>
+<a name="State27" id="State27"/><h3>State 27</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ifStatement&gt; ::= IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State26">26</a><br>
+<b>Transitions:</b> <br>
+<a name="State28" id="State28"/><h3>State 28</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;forStatement&gt; ::= FOR · &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= FOR · &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State34">34</a>, <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State118">118</a>, <a href="#State26">26</a>, <a href="#State24">24</a>, <a href="#State13">13</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <a href="#State29">29</a>(&lt;variableRef&gt;), <a href="#State120">120</a>(IDENTIFIER)<br>
+<a name="State29" id="State29"/><h3>State 29</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; · ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; · ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State28">28</a><br>
+<b>Transitions:</b> <a href="#State30">30</a>(ASSIGN)<br>
+<a name="State30" id="State30"/><h3>State 30</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN · &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN · &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State29">29</a><br>
+<b>Transitions:</b> <a href="#State31">31</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State31" id="State31"/><h3>State 31</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; · TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; · DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State30">30</a><br>
+<b>Transitions:</b> <a href="#State32">32</a>(TO), <a href="#State116">116</a>(DOWNTO)<br>
+<a name="State32" id="State32"/><h3>State 32</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO · &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State31">31</a><br>
+<b>Transitions:</b> <a href="#State33">33</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State33" id="State33"/><h3>State 33</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; · DO &lt;statement&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State32">32</a><br>
+<b>Transitions:</b> <a href="#State34">34</a>(DO)<br>
+<a name="State34" id="State34"/><h3>State 34</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= ·<br>
+{SEMICOLON, ELSE, END, UNTIL}</li>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO · &lt;statement&gt;</li>
+<li>&lt;statement&gt; ::= · BEGIN &lt;statementList&gt; END</li>
+<li>&lt;statement&gt; ::= · &lt;functionCall&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;assignment&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;whileStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;repeatStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;forStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;ifStatement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;repeatStatement&gt; ::= · REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;whileStatement&gt; ::= · WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;assignment&gt; ::= · &lt;variableRef&gt; ASSIGN &lt;expression&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State33">33</a><br>
+<b>Transitions:</b> <a href="#State35">35</a>(&lt;statement&gt;), <a href="#State13">13</a>(BEGIN), <a href="#State16">16</a>(&lt;functionCall&gt;), <a href="#State17">17</a>(&lt;assignment&gt;), <a href="#State18">18</a>(&lt;whileStatement&gt;), <a href="#State19">19</a>(&lt;repeatStatement&gt;), <a href="#State20">20</a>(&lt;forStatement&gt;), <a href="#State21">21</a>(&lt;ifStatement&gt;), <a href="#State22">22</a>(IF), <a href="#State28">28</a>(FOR), <a href="#State36">36</a>(REPEAT), <a href="#State102">102</a>(WHILE), <a href="#State108">108</a>(&lt;variableRef&gt;), <a href="#State111">111</a>(IDENTIFIER)<br>
+<a name="State35" id="State35"/><h3>State 35</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State34">34</a><br>
+<b>Transitions:</b> <br>
+<a name="State36" id="State36"/><h3>State 36</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= ·<br>
+{SEMICOLON, ELSE, END, UNTIL}</li>
+<li>&lt;repeatStatement&gt; ::= REPEAT · &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt;</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt; SEMICOLON &lt;statementList&gt;</li>
+<li>&lt;statement&gt; ::= · BEGIN &lt;statementList&gt; END</li>
+<li>&lt;statement&gt; ::= · &lt;functionCall&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;assignment&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;whileStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;repeatStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;forStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;ifStatement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;repeatStatement&gt; ::= · REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;whileStatement&gt; ::= · WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;assignment&gt; ::= · &lt;variableRef&gt; ASSIGN &lt;expression&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State36">36</a>, <a href="#State105">105</a>, <a href="#State34">34</a>, <a href="#State118">118</a>, <a href="#State26">26</a>, <a href="#State24">24</a>, <a href="#State13">13</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <a href="#State37">37</a>(&lt;statementList&gt;), <a href="#State10">10</a>(&lt;statement&gt;), <a href="#State13">13</a>(BEGIN), <a href="#State16">16</a>(&lt;functionCall&gt;), <a href="#State17">17</a>(&lt;assignment&gt;), <a href="#State18">18</a>(&lt;whileStatement&gt;), <a href="#State19">19</a>(&lt;repeatStatement&gt;), <a href="#State20">20</a>(&lt;forStatement&gt;), <a href="#State21">21</a>(&lt;ifStatement&gt;), <a href="#State22">22</a>(IF), <a href="#State28">28</a>(FOR), <a href="#State36">36</a>(REPEAT), <a href="#State102">102</a>(WHILE), <a href="#State108">108</a>(&lt;variableRef&gt;), <a href="#State111">111</a>(IDENTIFIER)<br>
+<a name="State37" id="State37"/><h3>State 37</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;repeatStatement&gt; ::= REPEAT &lt;statementList&gt; · UNTIL &lt;expression&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State36">36</a><br>
+<b>Transitions:</b> <a href="#State38">38</a>(UNTIL)<br>
+<a name="State38" id="State38"/><h3>State 38</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;repeatStatement&gt; ::= REPEAT &lt;statementList&gt; UNTIL · &lt;expression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State37">37</a><br>
+<b>Transitions:</b> <a href="#State39">39</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State39" id="State39"/><h3>State 39</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;repeatStatement&gt; ::= REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State38">38</a><br>
+<b>Transitions:</b> <br>
+<a name="State40" id="State40"/><h3>State 40</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;expression&gt; ::= &lt;simpleExpression&gt; ·<br>
+{SEMICOLON, COMMA, RPAREN, RBRACKET, DO, DOWNTO, ELSE, END, THEN, TO, UNTIL}</li>
+<li>&lt;relationalExpression&gt; ::= &lt;simpleExpression&gt; · &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;relationalOperator&gt; ::= · EQ</li>
+<li>&lt;relationalOperator&gt; ::= · NE</li>
+<li>&lt;relationalOperator&gt; ::= · LT</li>
+<li>&lt;relationalOperator&gt; ::= · LE</li>
+<li>&lt;relationalOperator&gt; ::= · GE</li>
+<li>&lt;relationalOperator&gt; ::= · GT</li>
+</ul>
+<b>Accessing states:</b> <a href="#State52">52</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <a href="#State41">41</a>(&lt;relationalOperator&gt;), <a href="#State96">96</a>(EQ), <a href="#State97">97</a>(NE), <a href="#State98">98</a>(LT), <a href="#State99">99</a>(LE), <a href="#State100">100</a>(GE), <a href="#State101">101</a>(GT)<br>
+<a name="State41" id="State41"/><h3>State 41</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;relationalExpression&gt; ::= &lt;simpleExpression&gt; &lt;relationalOperator&gt; · &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State40">40</a><br>
+<b>Transitions:</b> <a href="#State42">42</a>(&lt;simpleExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State42" id="State42"/><h3>State 42</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;relationalExpression&gt; ::= &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State41">41</a><br>
+<b>Transitions:</b> <br>
+<a name="State43" id="State43"/><h3>State 43</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;simpleExpression&gt; ::= &lt;term&gt; ·<br>
+{SEMICOLON, COMMA, EQ, NE, GE, GT, LE, LT, RPAREN, RBRACKET, DO, DOWNTO, ELSE, END, THEN, TO, UNTIL}</li>
+<li>&lt;simpleExpression&gt; ::= &lt;term&gt; · &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;additiveOperator&gt; ::= · PLUS</li>
+<li>&lt;additiveOperator&gt; ::= · MINUS</li>
+<li>&lt;additiveOperator&gt; ::= · OR</li>
+<li>&lt;additiveOperator&gt; ::= · XOR</li>
+</ul>
+<b>Accessing states:</b> <a href="#State44">44</a>, <a href="#State52">52</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <a href="#State44">44</a>(&lt;additiveOperator&gt;), <a href="#State92">92</a>(PLUS), <a href="#State93">93</a>(MINUS), <a href="#State94">94</a>(OR), <a href="#State95">95</a>(XOR)<br>
+<a name="State44" id="State44"/><h3>State 44</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;simpleExpression&gt; ::= &lt;term&gt; &lt;additiveOperator&gt; · &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State43">43</a><br>
+<b>Transitions:</b> <a href="#State45">45</a>(&lt;simpleExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State45" id="State45"/><h3>State 45</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;simpleExpression&gt; ::= &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State44">44</a><br>
+<b>Transitions:</b> <br>
+<a name="State46" id="State46"/><h3>State 46</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;term&gt; ::= &lt;factor&gt; ·<br>
+{SEMICOLON, COMMA, PLUS, MINUS, EQ, NE, GE, GT, LE, LT, RPAREN, RBRACKET, DO, DOWNTO, ELSE, END, OR, THEN, TO, UNTIL, XOR}</li>
+<li>&lt;term&gt; ::= &lt;factor&gt; · &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;multiplicativeOperator&gt; ::= · TIMES</li>
+<li>&lt;multiplicativeOperator&gt; ::= · DIVIDEDBY</li>
+<li>&lt;multiplicativeOperator&gt; ::= · DIV</li>
+<li>&lt;multiplicativeOperator&gt; ::= · MOD</li>
+<li>&lt;multiplicativeOperator&gt; ::= · SHL</li>
+<li>&lt;multiplicativeOperator&gt; ::= · SHR</li>
+<li>&lt;multiplicativeOperator&gt; ::= · AND</li>
+</ul>
+<b>Accessing states:</b> <a href="#State47">47</a>, <a href="#State52">52</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <a href="#State47">47</a>(&lt;multiplicativeOperator&gt;), <a href="#State85">85</a>(TIMES), <a href="#State86">86</a>(DIVIDEDBY), <a href="#State87">87</a>(DIV), <a href="#State88">88</a>(MOD), <a href="#State89">89</a>(SHL), <a href="#State90">90</a>(SHR), <a href="#State91">91</a>(AND)<br>
+<a name="State47" id="State47"/><h3>State 47</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;term&gt; ::= &lt;factor&gt; &lt;multiplicativeOperator&gt; · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State46">46</a><br>
+<b>Transitions:</b> <a href="#State48">48</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State48" id="State48"/><h3>State 48</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;term&gt; ::= &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State47">47</a><br>
+<b>Transitions:</b> <br>
+<a name="State49" id="State49"/><h3>State 49</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;factor&gt; ::= &lt;computedValue&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State47">47</a>, <a href="#State52">52</a>, <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State50" id="State50"/><h3>State 50</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;factor&gt; ::= &lt;literal&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State47">47</a>, <a href="#State52">52</a>, <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State51" id="State51"/><h3>State 51</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;factor&gt; ::= &lt;unaryExpression&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State47">47</a>, <a href="#State52">52</a>, <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State52" id="State52"/><h3>State 52</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;factor&gt; ::= LPAREN · &lt;expression&gt; RPAREN</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State52">52</a>, <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <a href="#State53">53</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State53" id="State53"/><h3>State 53</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;factor&gt; ::= LPAREN &lt;expression&gt; · RPAREN</li>
+</ul>
+<b>Accessing states:</b> <a href="#State52">52</a><br>
+<b>Transitions:</b> <a href="#State54">54</a>(RPAREN)<br>
+<a name="State54" id="State54"/><h3>State 54</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;factor&gt; ::= LPAREN &lt;expression&gt; RPAREN ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State53">53</a><br>
+<b>Transitions:</b> <br>
+<a name="State55" id="State55"/><h3>State 55</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;expression&gt; ::= &lt;relationalExpression&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State52">52</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State56" id="State56"/><h3>State 56</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;unaryExpression&gt; ::= &lt;unaryOperator&gt; · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <a href="#State57">57</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State57" id="State57"/><h3>State 57</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;unaryExpression&gt; ::= &lt;unaryOperator&gt; &lt;factor&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a><br>
+<b>Transitions:</b> <br>
+<a name="State58" id="State58"/><h3>State 58</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;unaryOperator&gt; ::= &lt;sign&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State59" id="State59"/><h3>State 59</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;unaryOperator&gt; ::= NOT ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State60" id="State60"/><h3>State 60</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;sign&gt; ::= PLUS ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State61" id="State61"/><h3>State 61</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;sign&gt; ::= MINUS ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State62" id="State62"/><h3>State 62</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;literal&gt; ::= STRING ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State63" id="State63"/><h3>State 63</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;literal&gt; ::= CHAR ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State64" id="State64"/><h3>State 64</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;literal&gt; ::= INTEGER ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State65" id="State65"/><h3>State 65</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;literal&gt; ::= REAL ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State66" id="State66"/><h3>State 66</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;literal&gt; ::= NIL ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State56">56</a>, <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <br>
+<a name="State67" id="State67"/><h3>State 67</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;qualifiers&gt; ::= ·<br>
+{ASSIGN, SEMICOLON, COMMA, PLUS, MINUS, TIMES, DIVIDEDBY, EQ, NE, GE, GT, LE, LT, RPAREN, RBRACKET, AND, DIV, DO, DOWNTO, ELSE, END, MOD, OR, SHL, SHR, THEN, TO, UNTIL, XOR}</li>
+<li>&lt;computedValue&gt; ::= &lt;simpleValue&gt; · &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · CARET &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · STOP IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · LBRACKET &lt;nonemptyExpressionCommaList&gt; RBRACKET</li>
+</ul>
+<b>Accessing states:</b> <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State56">56</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <a href="#State68">68</a>(&lt;qualifiers&gt;), <a href="#State69">69</a>(CARET), <a href="#State71">71</a>(STOP), <a href="#State74">74</a>(LBRACKET)<br>
+<a name="State68" id="State68"/><h3>State 68</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;computedValue&gt; ::= &lt;simpleValue&gt; &lt;qualifiers&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State67">67</a><br>
+<b>Transitions:</b> <br>
+<a name="State69" id="State69"/><h3>State 69</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;qualifiers&gt; ::= ·<br>
+{ASSIGN, SEMICOLON, COMMA, PLUS, MINUS, TIMES, DIVIDEDBY, EQ, NE, GE, GT, LE, LT, RPAREN, RBRACKET, AND, DIV, DO, DOWNTO, ELSE, END, MOD, OR, SHL, SHR, THEN, TO, UNTIL, XOR}</li>
+<li>&lt;qualifiers&gt; ::= CARET · &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · CARET &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · STOP IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · LBRACKET &lt;nonemptyExpressionCommaList&gt; RBRACKET</li>
+</ul>
+<b>Accessing states:</b> <a href="#State69">69</a>, <a href="#State72">72</a>, <a href="#State67">67</a>, <a href="#State111">111</a>, <a href="#State120">120</a><br>
+<b>Transitions:</b> <a href="#State70">70</a>(&lt;qualifiers&gt;), <a href="#State69">69</a>(CARET), <a href="#State71">71</a>(STOP), <a href="#State74">74</a>(LBRACKET)<br>
+<a name="State70" id="State70"/><h3>State 70</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;qualifiers&gt; ::= CARET &lt;qualifiers&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State69">69</a><br>
+<b>Transitions:</b> <br>
+<a name="State71" id="State71"/><h3>State 71</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;qualifiers&gt; ::= STOP · IDENTIFIER &lt;qualifiers&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State72">72</a>, <a href="#State69">69</a>, <a href="#State67">67</a>, <a href="#State111">111</a>, <a href="#State120">120</a><br>
+<b>Transitions:</b> <a href="#State72">72</a>(IDENTIFIER)<br>
+<a name="State72" id="State72"/><h3>State 72</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;qualifiers&gt; ::= ·<br>
+{ASSIGN, SEMICOLON, COMMA, PLUS, MINUS, TIMES, DIVIDEDBY, EQ, NE, GE, GT, LE, LT, RPAREN, RBRACKET, AND, DIV, DO, DOWNTO, ELSE, END, MOD, OR, SHL, SHR, THEN, TO, UNTIL, XOR}</li>
+<li>&lt;qualifiers&gt; ::= STOP IDENTIFIER · &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · CARET &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · STOP IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · LBRACKET &lt;nonemptyExpressionCommaList&gt; RBRACKET</li>
+</ul>
+<b>Accessing states:</b> <a href="#State71">71</a><br>
+<b>Transitions:</b> <a href="#State73">73</a>(&lt;qualifiers&gt;), <a href="#State69">69</a>(CARET), <a href="#State71">71</a>(STOP), <a href="#State74">74</a>(LBRACKET)<br>
+<a name="State73" id="State73"/><h3>State 73</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;qualifiers&gt; ::= STOP IDENTIFIER &lt;qualifiers&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State72">72</a><br>
+<b>Transitions:</b> <br>
+<a name="State74" id="State74"/><h3>State 74</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;qualifiers&gt; ::= LBRACKET · &lt;nonemptyExpressionCommaList&gt; RBRACKET</li>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= · &lt;expression&gt;</li>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= · &lt;expression&gt; COMMA &lt;nonemptyExpressionCommaList&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State72">72</a>, <a href="#State69">69</a>, <a href="#State67">67</a>, <a href="#State111">111</a>, <a href="#State120">120</a><br>
+<b>Transitions:</b> <a href="#State75">75</a>(&lt;nonemptyExpressionCommaList&gt;), <a href="#State77">77</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State75" id="State75"/><h3>State 75</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;qualifiers&gt; ::= LBRACKET &lt;nonemptyExpressionCommaList&gt; · RBRACKET</li>
+</ul>
+<b>Accessing states:</b> <a href="#State74">74</a><br>
+<b>Transitions:</b> <a href="#State76">76</a>(RBRACKET)<br>
+<a name="State76" id="State76"/><h3>State 76</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;qualifiers&gt; ::= LBRACKET &lt;nonemptyExpressionCommaList&gt; RBRACKET ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State75">75</a><br>
+<b>Transitions:</b> <br>
+<a name="State77" id="State77"/><h3>State 77</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= &lt;expression&gt; ·<br>
+{RPAREN, RBRACKET}</li>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= &lt;expression&gt; · COMMA &lt;nonemptyExpressionCommaList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State78">78</a>, <a href="#State81">81</a>, <a href="#State74">74</a>, <a href="#State113">113</a><br>
+<b>Transitions:</b> <a href="#State78">78</a>(COMMA)<br>
+<a name="State78" id="State78"/><h3>State 78</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= &lt;expression&gt; COMMA · &lt;nonemptyExpressionCommaList&gt;</li>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= · &lt;expression&gt;</li>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= · &lt;expression&gt; COMMA &lt;nonemptyExpressionCommaList&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State77">77</a><br>
+<b>Transitions:</b> <a href="#State79">79</a>(&lt;nonemptyExpressionCommaList&gt;), <a href="#State77">77</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State79" id="State79"/><h3>State 79</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= &lt;expression&gt; COMMA &lt;nonemptyExpressionCommaList&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State78">78</a><br>
+<b>Transitions:</b> <br>
+<a name="State80" id="State80"/><h3>State 80</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;simpleValue&gt; ::= IDENTIFIER ·<br>
+{SEMICOLON, COMMA, STOP, CARET, PLUS, MINUS, TIMES, DIVIDEDBY, EQ, NE, GE, GT, LE, LT, RPAREN, LBRACKET, RBRACKET, AND, DIV, DO, DOWNTO, ELSE, END, MOD, OR, SHL, SHR, THEN, TO, UNTIL, XOR}</li>
+<li>&lt;simpleValue&gt; ::= IDENTIFIER · LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+</ul>
+<b>Accessing states:</b> <a href="#State81">81</a>, <a href="#State78">78</a>, <a href="#State74">74</a>, <a href="#State56">56</a>, <a href="#State52">52</a>, <a href="#State47">47</a>, <a href="#State44">44</a>, <a href="#State41">41</a>, <a href="#State38">38</a>, <a href="#State109">109</a>, <a href="#State113">113</a>, <a href="#State102">102</a>, <a href="#State32">32</a>, <a href="#State116">116</a>, <a href="#State30">30</a>, <a href="#State22">22</a>, <a href="#State227">227</a><br>
+<b>Transitions:</b> <a href="#State81">81</a>(LPAREN)<br>
+<a name="State81" id="State81"/><h3>State 81</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;expressionCommaList&gt; ::= ·<br>
+{RPAREN}</li>
+<li>&lt;simpleValue&gt; ::= IDENTIFIER LPAREN · &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;expressionCommaList&gt; ::= · &lt;nonemptyExpressionCommaList&gt;</li>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= · &lt;expression&gt;</li>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= · &lt;expression&gt; COMMA &lt;nonemptyExpressionCommaList&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State80">80</a><br>
+<b>Transitions:</b> <a href="#State82">82</a>(&lt;expressionCommaList&gt;), <a href="#State84">84</a>(&lt;nonemptyExpressionCommaList&gt;), <a href="#State77">77</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State82" id="State82"/><h3>State 82</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;simpleValue&gt; ::= IDENTIFIER LPAREN &lt;expressionCommaList&gt; · RPAREN</li>
+</ul>
+<b>Accessing states:</b> <a href="#State81">81</a><br>
+<b>Transitions:</b> <a href="#State83">83</a>(RPAREN)<br>
+<a name="State83" id="State83"/><h3>State 83</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;simpleValue&gt; ::= IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State82">82</a><br>
+<b>Transitions:</b> <br>
+<a name="State84" id="State84"/><h3>State 84</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;expressionCommaList&gt; ::= &lt;nonemptyExpressionCommaList&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State81">81</a>, <a href="#State113">113</a><br>
+<b>Transitions:</b> <br>
+<a name="State85" id="State85"/><h3>State 85</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;multiplicativeOperator&gt; ::= TIMES ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State46">46</a><br>
+<b>Transitions:</b> <br>
+<a name="State86" id="State86"/><h3>State 86</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;multiplicativeOperator&gt; ::= DIVIDEDBY ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State46">46</a><br>
+<b>Transitions:</b> <br>
+<a name="State87" id="State87"/><h3>State 87</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;multiplicativeOperator&gt; ::= DIV ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State46">46</a><br>
+<b>Transitions:</b> <br>
+<a name="State88" id="State88"/><h3>State 88</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;multiplicativeOperator&gt; ::= MOD ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State46">46</a><br>
+<b>Transitions:</b> <br>
+<a name="State89" id="State89"/><h3>State 89</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;multiplicativeOperator&gt; ::= SHL ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State46">46</a><br>
+<b>Transitions:</b> <br>
+<a name="State90" id="State90"/><h3>State 90</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;multiplicativeOperator&gt; ::= SHR ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State46">46</a><br>
+<b>Transitions:</b> <br>
+<a name="State91" id="State91"/><h3>State 91</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;multiplicativeOperator&gt; ::= AND ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State46">46</a><br>
+<b>Transitions:</b> <br>
+<a name="State92" id="State92"/><h3>State 92</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;additiveOperator&gt; ::= PLUS ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State43">43</a><br>
+<b>Transitions:</b> <br>
+<a name="State93" id="State93"/><h3>State 93</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;additiveOperator&gt; ::= MINUS ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State43">43</a><br>
+<b>Transitions:</b> <br>
+<a name="State94" id="State94"/><h3>State 94</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;additiveOperator&gt; ::= OR ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State43">43</a><br>
+<b>Transitions:</b> <br>
+<a name="State95" id="State95"/><h3>State 95</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;additiveOperator&gt; ::= XOR ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State43">43</a><br>
+<b>Transitions:</b> <br>
+<a name="State96" id="State96"/><h3>State 96</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;relationalOperator&gt; ::= EQ ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State40">40</a><br>
+<b>Transitions:</b> <br>
+<a name="State97" id="State97"/><h3>State 97</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;relationalOperator&gt; ::= NE ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State40">40</a><br>
+<b>Transitions:</b> <br>
+<a name="State98" id="State98"/><h3>State 98</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;relationalOperator&gt; ::= LT ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State40">40</a><br>
+<b>Transitions:</b> <br>
+<a name="State99" id="State99"/><h3>State 99</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;relationalOperator&gt; ::= LE ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State40">40</a><br>
+<b>Transitions:</b> <br>
+<a name="State100" id="State100"/><h3>State 100</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;relationalOperator&gt; ::= GE ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State40">40</a><br>
+<b>Transitions:</b> <br>
+<a name="State101" id="State101"/><h3>State 101</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;relationalOperator&gt; ::= GT ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State40">40</a><br>
+<b>Transitions:</b> <br>
+<a name="State102" id="State102"/><h3>State 102</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;whileStatement&gt; ::= WHILE · &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State105">105</a>, <a href="#State36">36</a>, <a href="#State34">34</a>, <a href="#State118">118</a>, <a href="#State26">26</a>, <a href="#State24">24</a>, <a href="#State13">13</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <a href="#State103">103</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State103" id="State103"/><h3>State 103</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;whileStatement&gt; ::= WHILE &lt;expression&gt; · DO BEGIN &lt;statementList&gt; END</li>
+</ul>
+<b>Accessing states:</b> <a href="#State102">102</a><br>
+<b>Transitions:</b> <a href="#State104">104</a>(DO)<br>
+<a name="State104" id="State104"/><h3>State 104</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;whileStatement&gt; ::= WHILE &lt;expression&gt; DO · BEGIN &lt;statementList&gt; END</li>
+</ul>
+<b>Accessing states:</b> <a href="#State103">103</a><br>
+<b>Transitions:</b> <a href="#State105">105</a>(BEGIN)<br>
+<a name="State105" id="State105"/><h3>State 105</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= ·<br>
+{SEMICOLON, ELSE, END, UNTIL}</li>
+<li>&lt;whileStatement&gt; ::= WHILE &lt;expression&gt; DO BEGIN · &lt;statementList&gt; END</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt;</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt; SEMICOLON &lt;statementList&gt;</li>
+<li>&lt;statement&gt; ::= · BEGIN &lt;statementList&gt; END</li>
+<li>&lt;statement&gt; ::= · &lt;functionCall&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;assignment&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;whileStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;repeatStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;forStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;ifStatement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;repeatStatement&gt; ::= · REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;whileStatement&gt; ::= · WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;assignment&gt; ::= · &lt;variableRef&gt; ASSIGN &lt;expression&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State104">104</a><br>
+<b>Transitions:</b> <a href="#State106">106</a>(&lt;statementList&gt;), <a href="#State10">10</a>(&lt;statement&gt;), <a href="#State13">13</a>(BEGIN), <a href="#State16">16</a>(&lt;functionCall&gt;), <a href="#State17">17</a>(&lt;assignment&gt;), <a href="#State18">18</a>(&lt;whileStatement&gt;), <a href="#State19">19</a>(&lt;repeatStatement&gt;), <a href="#State20">20</a>(&lt;forStatement&gt;), <a href="#State21">21</a>(&lt;ifStatement&gt;), <a href="#State22">22</a>(IF), <a href="#State28">28</a>(FOR), <a href="#State36">36</a>(REPEAT), <a href="#State102">102</a>(WHILE), <a href="#State108">108</a>(&lt;variableRef&gt;), <a href="#State111">111</a>(IDENTIFIER)<br>
+<a name="State106" id="State106"/><h3>State 106</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;whileStatement&gt; ::= WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; · END</li>
+</ul>
+<b>Accessing states:</b> <a href="#State105">105</a><br>
+<b>Transitions:</b> <a href="#State107">107</a>(END)<br>
+<a name="State107" id="State107"/><h3>State 107</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;whileStatement&gt; ::= WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State106">106</a><br>
+<b>Transitions:</b> <br>
+<a name="State108" id="State108"/><h3>State 108</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;assignment&gt; ::= &lt;variableRef&gt; · ASSIGN &lt;expression&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State105">105</a>, <a href="#State36">36</a>, <a href="#State34">34</a>, <a href="#State118">118</a>, <a href="#State26">26</a>, <a href="#State24">24</a>, <a href="#State13">13</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <a href="#State109">109</a>(ASSIGN)<br>
+<a name="State109" id="State109"/><h3>State 109</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;assignment&gt; ::= &lt;variableRef&gt; ASSIGN · &lt;expression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State108">108</a><br>
+<b>Transitions:</b> <a href="#State110">110</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State110" id="State110"/><h3>State 110</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;assignment&gt; ::= &lt;variableRef&gt; ASSIGN &lt;expression&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State109">109</a><br>
+<b>Transitions:</b> <br>
+<a name="State111" id="State111"/><h3>State 111</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;functionCall&gt; ::= IDENTIFIER ·<br>
+{SEMICOLON, ELSE, END, UNTIL}</li>
+<li>&lt;qualifiers&gt; ::= ·<br>
+{ASSIGN}</li>
+<li>&lt;variableRef&gt; ::= IDENTIFIER · &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= IDENTIFIER · LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;qualifiers&gt; ::= · CARET &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · STOP IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · LBRACKET &lt;nonemptyExpressionCommaList&gt; RBRACKET</li>
+</ul>
+<b>Accessing states:</b> <a href="#State105">105</a>, <a href="#State36">36</a>, <a href="#State34">34</a>, <a href="#State118">118</a>, <a href="#State26">26</a>, <a href="#State24">24</a>, <a href="#State13">13</a>, <a href="#State11">11</a>, <a href="#State6">6</a>, <a href="#State133">133</a><br>
+<b>Transitions:</b> <a href="#State112">112</a>(&lt;qualifiers&gt;), <a href="#State113">113</a>(LPAREN), <a href="#State69">69</a>(CARET), <a href="#State71">71</a>(STOP), <a href="#State74">74</a>(LBRACKET)<br>
+<a name="State112" id="State112"/><h3>State 112</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;variableRef&gt; ::= IDENTIFIER &lt;qualifiers&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State111">111</a>, <a href="#State120">120</a><br>
+<b>Transitions:</b> <br>
+<a name="State113" id="State113"/><h3>State 113</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;expressionCommaList&gt; ::= ·<br>
+{RPAREN}</li>
+<li>&lt;functionCall&gt; ::= IDENTIFIER LPAREN · &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;expressionCommaList&gt; ::= · &lt;nonemptyExpressionCommaList&gt;</li>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= · &lt;expression&gt;</li>
+<li>&lt;nonemptyExpressionCommaList&gt; ::= · &lt;expression&gt; COMMA &lt;nonemptyExpressionCommaList&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State111">111</a><br>
+<b>Transitions:</b> <a href="#State114">114</a>(&lt;expressionCommaList&gt;), <a href="#State84">84</a>(&lt;nonemptyExpressionCommaList&gt;), <a href="#State77">77</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State114" id="State114"/><h3>State 114</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;functionCall&gt; ::= IDENTIFIER LPAREN &lt;expressionCommaList&gt; · RPAREN</li>
+</ul>
+<b>Accessing states:</b> <a href="#State113">113</a><br>
+<b>Transitions:</b> <a href="#State115">115</a>(RPAREN)<br>
+<a name="State115" id="State115"/><h3>State 115</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;functionCall&gt; ::= IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State114">114</a><br>
+<b>Transitions:</b> <br>
+<a name="State116" id="State116"/><h3>State 116</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO · &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State31">31</a><br>
+<b>Transitions:</b> <a href="#State117">117</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State117" id="State117"/><h3>State 117</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; · DO &lt;statement&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State116">116</a><br>
+<b>Transitions:</b> <a href="#State118">118</a>(DO)<br>
+<a name="State118" id="State118"/><h3>State 118</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= ·<br>
+{SEMICOLON, ELSE, END, UNTIL}</li>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO · &lt;statement&gt;</li>
+<li>&lt;statement&gt; ::= · BEGIN &lt;statementList&gt; END</li>
+<li>&lt;statement&gt; ::= · &lt;functionCall&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;assignment&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;whileStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;repeatStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;forStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;ifStatement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;repeatStatement&gt; ::= · REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;whileStatement&gt; ::= · WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;assignment&gt; ::= · &lt;variableRef&gt; ASSIGN &lt;expression&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State117">117</a><br>
+<b>Transitions:</b> <a href="#State119">119</a>(&lt;statement&gt;), <a href="#State13">13</a>(BEGIN), <a href="#State16">16</a>(&lt;functionCall&gt;), <a href="#State17">17</a>(&lt;assignment&gt;), <a href="#State18">18</a>(&lt;whileStatement&gt;), <a href="#State19">19</a>(&lt;repeatStatement&gt;), <a href="#State20">20</a>(&lt;forStatement&gt;), <a href="#State21">21</a>(&lt;ifStatement&gt;), <a href="#State22">22</a>(IF), <a href="#State28">28</a>(FOR), <a href="#State36">36</a>(REPEAT), <a href="#State102">102</a>(WHILE), <a href="#State108">108</a>(&lt;variableRef&gt;), <a href="#State111">111</a>(IDENTIFIER)<br>
+<a name="State119" id="State119"/><h3>State 119</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;forStatement&gt; ::= FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State118">118</a><br>
+<b>Transitions:</b> <br>
+<a name="State120" id="State120"/><h3>State 120</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;qualifiers&gt; ::= ·<br>
+{ASSIGN}</li>
+<li>&lt;variableRef&gt; ::= IDENTIFIER · &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · CARET &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · STOP IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;qualifiers&gt; ::= · LBRACKET &lt;nonemptyExpressionCommaList&gt; RBRACKET</li>
+</ul>
+<b>Accessing states:</b> <a href="#State28">28</a><br>
+<b>Transitions:</b> <a href="#State112">112</a>(&lt;qualifiers&gt;), <a href="#State69">69</a>(CARET), <a href="#State71">71</a>(STOP), <a href="#State74">74</a>(LBRACKET)<br>
+<a name="State121" id="State121"/><h3>State 121</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;definitions&gt; ::= ·<br>
+{BEGIN}</li>
+<li>&lt;definitions&gt; ::= &lt;definition&gt; · &lt;definitions&gt;</li>
+<li>&lt;definitions&gt; ::= · &lt;definition&gt; &lt;definitions&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;constants&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;variables&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;types&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;function&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;procedure&gt;</li>
+<li>&lt;definition&gt; ::= · &lt;preprocessor&gt;</li>
+<li>&lt;preprocessor&gt; ::= · PREPROC</li>
+<li>&lt;procedure&gt; ::= · &lt;procedureHeader&gt; &lt;variables&gt; &lt;subroutineBody&gt;</li>
+<li>&lt;procedure&gt; ::= · &lt;procedureHeader&gt; &lt;subroutineBody&gt;</li>
+<li>&lt;procedureHeader&gt; ::= · PROCEDURE IDENTIFIER &lt;arguments&gt; SEMICOLON</li>
+<li>&lt;function&gt; ::= · &lt;functionHeader&gt; &lt;variables&gt; &lt;subroutineBody&gt;</li>
+<li>&lt;function&gt; ::= · &lt;functionHeader&gt; &lt;subroutineBody&gt;</li>
+<li>&lt;functionHeader&gt; ::= · FUNCTION IDENTIFIER &lt;arguments&gt; COLON &lt;type&gt; SEMICOLON</li>
+<li>&lt;types&gt; ::= · TYPE &lt;typeDefs&gt;</li>
+<li>&lt;variables&gt; ::= · VAR &lt;variableDefs&gt;</li>
+<li>&lt;constants&gt; ::= · CONST &lt;constantList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <a href="#State122">122</a>(&lt;definitions&gt;), <a href="#State121">121</a>(&lt;definition&gt;), <a href="#State123">123</a>(&lt;constants&gt;), <a href="#State124">124</a>(&lt;variables&gt;), <a href="#State125">125</a>(&lt;types&gt;), <a href="#State126">126</a>(&lt;function&gt;), <a href="#State127">127</a>(&lt;procedure&gt;), <a href="#State128">128</a>(&lt;preprocessor&gt;), <a href="#State129">129</a>(PREPROC), <a href="#State130">130</a>(&lt;procedureHeader&gt;), <a href="#State185">185</a>(PROCEDURE), <a href="#State203">203</a>(&lt;functionHeader&gt;), <a href="#State207">207</a>(FUNCTION), <a href="#State213">213</a>(TYPE), <a href="#State138">138</a>(VAR), <a href="#State220">220</a>(CONST)<br>
+<a name="State122" id="State122"/><h3>State 122</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;definitions&gt; ::= &lt;definition&gt; &lt;definitions&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a><br>
+<b>Transitions:</b> <br>
+<a name="State123" id="State123"/><h3>State 123</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;definition&gt; ::= &lt;constants&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <br>
+<a name="State124" id="State124"/><h3>State 124</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;definition&gt; ::= &lt;variables&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <br>
+<a name="State125" id="State125"/><h3>State 125</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;definition&gt; ::= &lt;types&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <br>
+<a name="State126" id="State126"/><h3>State 126</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;definition&gt; ::= &lt;function&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <br>
+<a name="State127" id="State127"/><h3>State 127</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;definition&gt; ::= &lt;procedure&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <br>
+<a name="State128" id="State128"/><h3>State 128</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;definition&gt; ::= &lt;preprocessor&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <br>
+<a name="State129" id="State129"/><h3>State 129</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;preprocessor&gt; ::= PREPROC ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <br>
+<a name="State130" id="State130"/><h3>State 130</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;procedure&gt; ::= &lt;procedureHeader&gt; · &lt;variables&gt; &lt;subroutineBody&gt;</li>
+<li>&lt;procedure&gt; ::= &lt;procedureHeader&gt; · &lt;subroutineBody&gt;</li>
+<li>&lt;subroutineBody&gt; ::= · BEGIN &lt;statementList&gt; END SEMICOLON</li>
+<li>&lt;variables&gt; ::= · VAR &lt;variableDefs&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <a href="#State131">131</a>(&lt;variables&gt;), <a href="#State137">137</a>(&lt;subroutineBody&gt;), <a href="#State133">133</a>(BEGIN), <a href="#State138">138</a>(VAR)<br>
+<a name="State131" id="State131"/><h3>State 131</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;procedure&gt; ::= &lt;procedureHeader&gt; &lt;variables&gt; · &lt;subroutineBody&gt;</li>
+<li>&lt;subroutineBody&gt; ::= · BEGIN &lt;statementList&gt; END SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State130">130</a><br>
+<b>Transitions:</b> <a href="#State132">132</a>(&lt;subroutineBody&gt;), <a href="#State133">133</a>(BEGIN)<br>
+<a name="State132" id="State132"/><h3>State 132</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;procedure&gt; ::= &lt;procedureHeader&gt; &lt;variables&gt; &lt;subroutineBody&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State131">131</a><br>
+<b>Transitions:</b> <br>
+<a name="State133" id="State133"/><h3>State 133</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;statement&gt; ::= ·<br>
+{SEMICOLON, END}</li>
+<li>&lt;subroutineBody&gt; ::= BEGIN · &lt;statementList&gt; END SEMICOLON</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt;</li>
+<li>&lt;statementList&gt; ::= · &lt;statement&gt; SEMICOLON &lt;statementList&gt;</li>
+<li>&lt;statement&gt; ::= · BEGIN &lt;statementList&gt; END</li>
+<li>&lt;statement&gt; ::= · &lt;functionCall&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;assignment&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;whileStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;repeatStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;forStatement&gt;</li>
+<li>&lt;statement&gt; ::= · &lt;ifStatement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt;</li>
+<li>&lt;ifStatement&gt; ::= · IF &lt;expression&gt; THEN &lt;statement&gt; ELSE &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; TO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;forStatement&gt; ::= · FOR &lt;variableRef&gt; ASSIGN &lt;expression&gt; DOWNTO &lt;expression&gt; DO &lt;statement&gt;</li>
+<li>&lt;repeatStatement&gt; ::= · REPEAT &lt;statementList&gt; UNTIL &lt;expression&gt;</li>
+<li>&lt;whileStatement&gt; ::= · WHILE &lt;expression&gt; DO BEGIN &lt;statementList&gt; END</li>
+<li>&lt;assignment&gt; ::= · &lt;variableRef&gt; ASSIGN &lt;expression&gt;</li>
+<li>&lt;variableRef&gt; ::= · IDENTIFIER &lt;qualifiers&gt;</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;functionCall&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State131">131</a>, <a href="#State130">130</a>, <a href="#State204">204</a>, <a href="#State203">203</a><br>
+<b>Transitions:</b> <a href="#State134">134</a>(&lt;statementList&gt;), <a href="#State10">10</a>(&lt;statement&gt;), <a href="#State13">13</a>(BEGIN), <a href="#State16">16</a>(&lt;functionCall&gt;), <a href="#State17">17</a>(&lt;assignment&gt;), <a href="#State18">18</a>(&lt;whileStatement&gt;), <a href="#State19">19</a>(&lt;repeatStatement&gt;), <a href="#State20">20</a>(&lt;forStatement&gt;), <a href="#State21">21</a>(&lt;ifStatement&gt;), <a href="#State22">22</a>(IF), <a href="#State28">28</a>(FOR), <a href="#State36">36</a>(REPEAT), <a href="#State102">102</a>(WHILE), <a href="#State108">108</a>(&lt;variableRef&gt;), <a href="#State111">111</a>(IDENTIFIER)<br>
+<a name="State134" id="State134"/><h3>State 134</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;subroutineBody&gt; ::= BEGIN &lt;statementList&gt; · END SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State133">133</a><br>
+<b>Transitions:</b> <a href="#State135">135</a>(END)<br>
+<a name="State135" id="State135"/><h3>State 135</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;subroutineBody&gt; ::= BEGIN &lt;statementList&gt; END · SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State134">134</a><br>
+<b>Transitions:</b> <a href="#State136">136</a>(SEMICOLON)<br>
+<a name="State136" id="State136"/><h3>State 136</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;subroutineBody&gt; ::= BEGIN &lt;statementList&gt; END SEMICOLON ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State135">135</a><br>
+<b>Transitions:</b> <br>
+<a name="State137" id="State137"/><h3>State 137</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;procedure&gt; ::= &lt;procedureHeader&gt; &lt;subroutineBody&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State130">130</a><br>
+<b>Transitions:</b> <br>
+<a name="State138" id="State138"/><h3>State 138</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;variables&gt; ::= VAR · &lt;variableDefs&gt;</li>
+<li>&lt;variableDefs&gt; ::= · &lt;variableDef&gt;</li>
+<li>&lt;variableDefs&gt; ::= · &lt;variableDef&gt; &lt;variableDefs&gt;</li>
+<li>&lt;variableDef&gt; ::= · &lt;identifierCommaList&gt; COLON &lt;type&gt; SEMICOLON</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER COMMA &lt;identifierCommaList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State130">130</a>, <a href="#State203">203</a>, <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <a href="#State139">139</a>(&lt;variableDefs&gt;), <a href="#State140">140</a>(&lt;variableDef&gt;), <a href="#State142">142</a>(&lt;identifierCommaList&gt;), <a href="#State165">165</a>(IDENTIFIER)<br>
+<a name="State139" id="State139"/><h3>State 139</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;variables&gt; ::= VAR &lt;variableDefs&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State138">138</a><br>
+<b>Transitions:</b> <br>
+<a name="State140" id="State140"/><h3>State 140</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;variableDefs&gt; ::= &lt;variableDef&gt; ·<br>
+{BEGIN, CONST, FUNCTION, PROCEDURE, TYPE, VAR, PREPROC}</li>
+<li>&lt;variableDefs&gt; ::= &lt;variableDef&gt; · &lt;variableDefs&gt;</li>
+<li>&lt;variableDefs&gt; ::= · &lt;variableDef&gt;</li>
+<li>&lt;variableDefs&gt; ::= · &lt;variableDef&gt; &lt;variableDefs&gt;</li>
+<li>&lt;variableDef&gt; ::= · &lt;identifierCommaList&gt; COLON &lt;type&gt; SEMICOLON</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER COMMA &lt;identifierCommaList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State140">140</a>, <a href="#State138">138</a><br>
+<b>Transitions:</b> <a href="#State141">141</a>(&lt;variableDefs&gt;), <a href="#State140">140</a>(&lt;variableDef&gt;), <a href="#State142">142</a>(&lt;identifierCommaList&gt;), <a href="#State165">165</a>(IDENTIFIER)<br>
+<a name="State141" id="State141"/><h3>State 141</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;variableDefs&gt; ::= &lt;variableDef&gt; &lt;variableDefs&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State140">140</a><br>
+<b>Transitions:</b> <br>
+<a name="State142" id="State142"/><h3>State 142</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;variableDef&gt; ::= &lt;identifierCommaList&gt; · COLON &lt;type&gt; SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State140">140</a>, <a href="#State138">138</a><br>
+<b>Transitions:</b> <a href="#State143">143</a>(COLON)<br>
+<a name="State143" id="State143"/><h3>State 143</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;variableDef&gt; ::= &lt;identifierCommaList&gt; COLON · &lt;type&gt; SEMICOLON</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State142">142</a><br>
+<b>Transitions:</b> <a href="#State144">144</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State144" id="State144"/><h3>State 144</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;variableDef&gt; ::= &lt;identifierCommaList&gt; COLON &lt;type&gt; · SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State143">143</a><br>
+<b>Transitions:</b> <a href="#State145">145</a>(SEMICOLON)<br>
+<a name="State145" id="State145"/><h3>State 145</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;variableDef&gt; ::= &lt;identifierCommaList&gt; COLON &lt;type&gt; SEMICOLON ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State144">144</a><br>
+<b>Transitions:</b> <br>
+<a name="State146" id="State146"/><h3>State 146</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= IDENTIFIER ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State143">143</a>, <a href="#State148">148</a>, <a href="#State157">157</a>, <a href="#State160">160</a>, <a href="#State163">163</a>, <a href="#State171">171</a>, <a href="#State198">198</a>, <a href="#State201">201</a>, <a href="#State210">210</a>, <a href="#State218">218</a>, <a href="#State225">225</a><br>
+<b>Transitions:</b> <br>
+<a name="State147" id="State147"/><h3>State 147</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= ARRAY · OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= ARRAY · LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State148">148</a>, <a href="#State157">157</a>, <a href="#State160">160</a>, <a href="#State163">163</a>, <a href="#State171">171</a>, <a href="#State143">143</a>, <a href="#State198">198</a>, <a href="#State201">201</a>, <a href="#State210">210</a>, <a href="#State218">218</a>, <a href="#State225">225</a><br>
+<b>Transitions:</b> <a href="#State148">148</a>(OF), <a href="#State168">168</a>(LBRACKET)<br>
+<a name="State148" id="State148"/><h3>State 148</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= ARRAY OF · &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State147">147</a><br>
+<b>Transitions:</b> <a href="#State149">149</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State149" id="State149"/><h3>State 149</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= ARRAY OF &lt;type&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State148">148</a><br>
+<b>Transitions:</b> <br>
+<a name="State150" id="State150"/><h3>State 150</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= RECORD · &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;memberDefs&gt; ::= · &lt;memberDef&gt;</li>
+<li>&lt;memberDefs&gt; ::= · &lt;memberDef&gt; &lt;memberDefs&gt;</li>
+<li>&lt;memberDef&gt; ::= · &lt;identifierCommaList&gt; COLON &lt;type&gt; SEMICOLON</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER COMMA &lt;identifierCommaList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State157">157</a>, <a href="#State160">160</a>, <a href="#State163">163</a>, <a href="#State148">148</a>, <a href="#State171">171</a>, <a href="#State143">143</a>, <a href="#State198">198</a>, <a href="#State201">201</a>, <a href="#State210">210</a>, <a href="#State218">218</a>, <a href="#State225">225</a><br>
+<b>Transitions:</b> <a href="#State151">151</a>(&lt;memberDefs&gt;), <a href="#State154">154</a>(&lt;memberDef&gt;), <a href="#State156">156</a>(&lt;identifierCommaList&gt;), <a href="#State165">165</a>(IDENTIFIER)<br>
+<a name="State151" id="State151"/><h3>State 151</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= RECORD &lt;memberDefs&gt; · END SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State150">150</a><br>
+<b>Transitions:</b> <a href="#State152">152</a>(END)<br>
+<a name="State152" id="State152"/><h3>State 152</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= RECORD &lt;memberDefs&gt; END · SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State151">151</a><br>
+<b>Transitions:</b> <a href="#State153">153</a>(SEMICOLON)<br>
+<a name="State153" id="State153"/><h3>State 153</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= RECORD &lt;memberDefs&gt; END SEMICOLON ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State152">152</a><br>
+<b>Transitions:</b> <br>
+<a name="State154" id="State154"/><h3>State 154</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;memberDefs&gt; ::= &lt;memberDef&gt; ·<br>
+{END}</li>
+<li>&lt;memberDefs&gt; ::= &lt;memberDef&gt; · &lt;memberDefs&gt;</li>
+<li>&lt;memberDefs&gt; ::= · &lt;memberDef&gt;</li>
+<li>&lt;memberDefs&gt; ::= · &lt;memberDef&gt; &lt;memberDefs&gt;</li>
+<li>&lt;memberDef&gt; ::= · &lt;identifierCommaList&gt; COLON &lt;type&gt; SEMICOLON</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER COMMA &lt;identifierCommaList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State154">154</a>, <a href="#State150">150</a><br>
+<b>Transitions:</b> <a href="#State155">155</a>(&lt;memberDefs&gt;), <a href="#State154">154</a>(&lt;memberDef&gt;), <a href="#State156">156</a>(&lt;identifierCommaList&gt;), <a href="#State165">165</a>(IDENTIFIER)<br>
+<a name="State155" id="State155"/><h3>State 155</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;memberDefs&gt; ::= &lt;memberDef&gt; &lt;memberDefs&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State154">154</a><br>
+<b>Transitions:</b> <br>
+<a name="State156" id="State156"/><h3>State 156</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;memberDef&gt; ::= &lt;identifierCommaList&gt; · COLON &lt;type&gt; SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State154">154</a>, <a href="#State150">150</a><br>
+<b>Transitions:</b> <a href="#State157">157</a>(COLON)<br>
+<a name="State157" id="State157"/><h3>State 157</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;memberDef&gt; ::= &lt;identifierCommaList&gt; COLON · &lt;type&gt; SEMICOLON</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State156">156</a><br>
+<b>Transitions:</b> <a href="#State158">158</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State158" id="State158"/><h3>State 158</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;memberDef&gt; ::= &lt;identifierCommaList&gt; COLON &lt;type&gt; · SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State157">157</a><br>
+<b>Transitions:</b> <a href="#State159">159</a>(SEMICOLON)<br>
+<a name="State159" id="State159"/><h3>State 159</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;memberDef&gt; ::= &lt;identifierCommaList&gt; COLON &lt;type&gt; SEMICOLON ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State158">158</a><br>
+<b>Transitions:</b> <br>
+<a name="State160" id="State160"/><h3>State 160</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= CARET · &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State160">160</a>, <a href="#State163">163</a>, <a href="#State157">157</a>, <a href="#State148">148</a>, <a href="#State171">171</a>, <a href="#State143">143</a>, <a href="#State198">198</a>, <a href="#State201">201</a>, <a href="#State210">210</a>, <a href="#State218">218</a>, <a href="#State225">225</a><br>
+<b>Transitions:</b> <a href="#State161">161</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State161" id="State161"/><h3>State 161</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= CARET &lt;type&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State160">160</a><br>
+<b>Transitions:</b> <br>
+<a name="State162" id="State162"/><h3>State 162</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= FILE · OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State163">163</a>, <a href="#State160">160</a>, <a href="#State157">157</a>, <a href="#State148">148</a>, <a href="#State171">171</a>, <a href="#State143">143</a>, <a href="#State198">198</a>, <a href="#State201">201</a>, <a href="#State210">210</a>, <a href="#State218">218</a>, <a href="#State225">225</a><br>
+<b>Transitions:</b> <a href="#State163">163</a>(OF)<br>
+<a name="State163" id="State163"/><h3>State 163</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= FILE OF · &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State162">162</a><br>
+<b>Transitions:</b> <a href="#State164">164</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State164" id="State164"/><h3>State 164</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= FILE OF &lt;type&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State163">163</a><br>
+<b>Transitions:</b> <br>
+<a name="State165" id="State165"/><h3>State 165</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;identifierCommaList&gt; ::= IDENTIFIER ·<br>
+{COLON}</li>
+<li>&lt;identifierCommaList&gt; ::= IDENTIFIER · COMMA &lt;identifierCommaList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State166">166</a>, <a href="#State154">154</a>, <a href="#State150">150</a>, <a href="#State140">140</a>, <a href="#State138">138</a>, <a href="#State196">196</a>, <a href="#State194">194</a>, <a href="#State189">189</a><br>
+<b>Transitions:</b> <a href="#State166">166</a>(COMMA)<br>
+<a name="State166" id="State166"/><h3>State 166</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;identifierCommaList&gt; ::= IDENTIFIER COMMA · &lt;identifierCommaList&gt;</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER COMMA &lt;identifierCommaList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State165">165</a><br>
+<b>Transitions:</b> <a href="#State167">167</a>(&lt;identifierCommaList&gt;), <a href="#State165">165</a>(IDENTIFIER)<br>
+<a name="State167" id="State167"/><h3>State 167</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;identifierCommaList&gt; ::= IDENTIFIER COMMA &lt;identifierCommaList&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State166">166</a><br>
+<b>Transitions:</b> <br>
+<a name="State168" id="State168"/><h3>State 168</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= ARRAY LBRACKET · &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;ordinalIntervals&gt; ::= · &lt;ordinalInterval&gt;</li>
+<li>&lt;ordinalIntervals&gt; ::= · &lt;ordinalInterval&gt; COMMA &lt;ordinalIntervals&gt;</li>
+<li>&lt;ordinalInterval&gt; ::= · INTEGER DOUBLESTOP INTEGER</li>
+<li>&lt;ordinalInterval&gt; ::= · CHAR DOUBLESTOP CHAR</li>
+<li>&lt;ordinalInterval&gt; ::= · IDENTIFIER DOUBLESTOP IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State147">147</a><br>
+<b>Transitions:</b> <a href="#State169">169</a>(&lt;ordinalIntervals&gt;), <a href="#State173">173</a>(&lt;ordinalInterval&gt;), <a href="#State176">176</a>(INTEGER), <a href="#State179">179</a>(CHAR), <a href="#State182">182</a>(IDENTIFIER)<br>
+<a name="State169" id="State169"/><h3>State 169</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= ARRAY LBRACKET &lt;ordinalIntervals&gt; · RBRACKET OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State168">168</a><br>
+<b>Transitions:</b> <a href="#State170">170</a>(RBRACKET)<br>
+<a name="State170" id="State170"/><h3>State 170</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET · OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State169">169</a><br>
+<b>Transitions:</b> <a href="#State171">171</a>(OF)<br>
+<a name="State171" id="State171"/><h3>State 171</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF · &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State170">170</a><br>
+<b>Transitions:</b> <a href="#State172">172</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State172" id="State172"/><h3>State 172</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;type&gt; ::= ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State171">171</a><br>
+<b>Transitions:</b> <br>
+<a name="State173" id="State173"/><h3>State 173</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalIntervals&gt; ::= &lt;ordinalInterval&gt; ·<br>
+{RBRACKET}</li>
+<li>&lt;ordinalIntervals&gt; ::= &lt;ordinalInterval&gt; · COMMA &lt;ordinalIntervals&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State174">174</a>, <a href="#State168">168</a><br>
+<b>Transitions:</b> <a href="#State174">174</a>(COMMA)<br>
+<a name="State174" id="State174"/><h3>State 174</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalIntervals&gt; ::= &lt;ordinalInterval&gt; COMMA · &lt;ordinalIntervals&gt;</li>
+<li>&lt;ordinalIntervals&gt; ::= · &lt;ordinalInterval&gt;</li>
+<li>&lt;ordinalIntervals&gt; ::= · &lt;ordinalInterval&gt; COMMA &lt;ordinalIntervals&gt;</li>
+<li>&lt;ordinalInterval&gt; ::= · INTEGER DOUBLESTOP INTEGER</li>
+<li>&lt;ordinalInterval&gt; ::= · CHAR DOUBLESTOP CHAR</li>
+<li>&lt;ordinalInterval&gt; ::= · IDENTIFIER DOUBLESTOP IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State173">173</a><br>
+<b>Transitions:</b> <a href="#State175">175</a>(&lt;ordinalIntervals&gt;), <a href="#State173">173</a>(&lt;ordinalInterval&gt;), <a href="#State176">176</a>(INTEGER), <a href="#State179">179</a>(CHAR), <a href="#State182">182</a>(IDENTIFIER)<br>
+<a name="State175" id="State175"/><h3>State 175</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalIntervals&gt; ::= &lt;ordinalInterval&gt; COMMA &lt;ordinalIntervals&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State174">174</a><br>
+<b>Transitions:</b> <br>
+<a name="State176" id="State176"/><h3>State 176</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalInterval&gt; ::= INTEGER · DOUBLESTOP INTEGER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State174">174</a>, <a href="#State168">168</a><br>
+<b>Transitions:</b> <a href="#State177">177</a>(DOUBLESTOP)<br>
+<a name="State177" id="State177"/><h3>State 177</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalInterval&gt; ::= INTEGER DOUBLESTOP · INTEGER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State176">176</a><br>
+<b>Transitions:</b> <a href="#State178">178</a>(INTEGER)<br>
+<a name="State178" id="State178"/><h3>State 178</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalInterval&gt; ::= INTEGER DOUBLESTOP INTEGER ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State177">177</a><br>
+<b>Transitions:</b> <br>
+<a name="State179" id="State179"/><h3>State 179</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalInterval&gt; ::= CHAR · DOUBLESTOP CHAR</li>
+</ul>
+<b>Accessing states:</b> <a href="#State174">174</a>, <a href="#State168">168</a><br>
+<b>Transitions:</b> <a href="#State180">180</a>(DOUBLESTOP)<br>
+<a name="State180" id="State180"/><h3>State 180</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalInterval&gt; ::= CHAR DOUBLESTOP · CHAR</li>
+</ul>
+<b>Accessing states:</b> <a href="#State179">179</a><br>
+<b>Transitions:</b> <a href="#State181">181</a>(CHAR)<br>
+<a name="State181" id="State181"/><h3>State 181</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalInterval&gt; ::= CHAR DOUBLESTOP CHAR ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State180">180</a><br>
+<b>Transitions:</b> <br>
+<a name="State182" id="State182"/><h3>State 182</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalInterval&gt; ::= IDENTIFIER · DOUBLESTOP IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State174">174</a>, <a href="#State168">168</a><br>
+<b>Transitions:</b> <a href="#State183">183</a>(DOUBLESTOP)<br>
+<a name="State183" id="State183"/><h3>State 183</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalInterval&gt; ::= IDENTIFIER DOUBLESTOP · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State182">182</a><br>
+<b>Transitions:</b> <a href="#State184">184</a>(IDENTIFIER)<br>
+<a name="State184" id="State184"/><h3>State 184</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;ordinalInterval&gt; ::= IDENTIFIER DOUBLESTOP IDENTIFIER ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State183">183</a><br>
+<b>Transitions:</b> <br>
+<a name="State185" id="State185"/><h3>State 185</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;procedureHeader&gt; ::= PROCEDURE · IDENTIFIER &lt;arguments&gt; SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <a href="#State186">186</a>(IDENTIFIER)<br>
+<a name="State186" id="State186"/><h3>State 186</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;arguments&gt; ::= ·<br>
+{SEMICOLON}</li>
+<li>&lt;procedureHeader&gt; ::= PROCEDURE IDENTIFIER · &lt;arguments&gt; SEMICOLON</li>
+<li>&lt;arguments&gt; ::= · LPAREN &lt;argumentDefs&gt; RPAREN</li>
+</ul>
+<b>Accessing states:</b> <a href="#State185">185</a><br>
+<b>Transitions:</b> <a href="#State187">187</a>(&lt;arguments&gt;), <a href="#State189">189</a>(LPAREN)<br>
+<a name="State187" id="State187"/><h3>State 187</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;procedureHeader&gt; ::= PROCEDURE IDENTIFIER &lt;arguments&gt; · SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State186">186</a><br>
+<b>Transitions:</b> <a href="#State188">188</a>(SEMICOLON)<br>
+<a name="State188" id="State188"/><h3>State 188</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;procedureHeader&gt; ::= PROCEDURE IDENTIFIER &lt;arguments&gt; SEMICOLON ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State187">187</a><br>
+<b>Transitions:</b> <br>
+<a name="State189" id="State189"/><h3>State 189</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;argumentDefs&gt; ::= ·<br>
+{RPAREN}</li>
+<li>&lt;arguments&gt; ::= LPAREN · &lt;argumentDefs&gt; RPAREN</li>
+<li>&lt;argumentDefs&gt; ::= · &lt;nonemptyArgumentDefs&gt;</li>
+<li>&lt;nonemptyArgumentDefs&gt; ::= · &lt;argumentDef&gt; SEMICOLON &lt;nonemptyArgumentDefs&gt;</li>
+<li>&lt;nonemptyArgumentDefs&gt; ::= · &lt;argumentDef&gt;</li>
+<li>&lt;argumentDef&gt; ::= · VAR &lt;identifierCommaList&gt; COLON &lt;type&gt;</li>
+<li>&lt;argumentDef&gt; ::= · &lt;identifierCommaList&gt; COLON &lt;type&gt;</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER COMMA &lt;identifierCommaList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State186">186</a>, <a href="#State208">208</a><br>
+<b>Transitions:</b> <a href="#State190">190</a>(&lt;argumentDefs&gt;), <a href="#State192">192</a>(&lt;nonemptyArgumentDefs&gt;), <a href="#State193">193</a>(&lt;argumentDef&gt;), <a href="#State196">196</a>(VAR), <a href="#State200">200</a>(&lt;identifierCommaList&gt;), <a href="#State165">165</a>(IDENTIFIER)<br>
+<a name="State190" id="State190"/><h3>State 190</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;arguments&gt; ::= LPAREN &lt;argumentDefs&gt; · RPAREN</li>
+</ul>
+<b>Accessing states:</b> <a href="#State189">189</a><br>
+<b>Transitions:</b> <a href="#State191">191</a>(RPAREN)<br>
+<a name="State191" id="State191"/><h3>State 191</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;arguments&gt; ::= LPAREN &lt;argumentDefs&gt; RPAREN ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State190">190</a><br>
+<b>Transitions:</b> <br>
+<a name="State192" id="State192"/><h3>State 192</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;argumentDefs&gt; ::= &lt;nonemptyArgumentDefs&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State189">189</a><br>
+<b>Transitions:</b> <br>
+<a name="State193" id="State193"/><h3>State 193</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;nonemptyArgumentDefs&gt; ::= &lt;argumentDef&gt; ·<br>
+{RPAREN}</li>
+<li>&lt;nonemptyArgumentDefs&gt; ::= &lt;argumentDef&gt; · SEMICOLON &lt;nonemptyArgumentDefs&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State194">194</a>, <a href="#State189">189</a><br>
+<b>Transitions:</b> <a href="#State194">194</a>(SEMICOLON)<br>
+<a name="State194" id="State194"/><h3>State 194</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;nonemptyArgumentDefs&gt; ::= &lt;argumentDef&gt; SEMICOLON · &lt;nonemptyArgumentDefs&gt;</li>
+<li>&lt;nonemptyArgumentDefs&gt; ::= · &lt;argumentDef&gt; SEMICOLON &lt;nonemptyArgumentDefs&gt;</li>
+<li>&lt;nonemptyArgumentDefs&gt; ::= · &lt;argumentDef&gt;</li>
+<li>&lt;argumentDef&gt; ::= · VAR &lt;identifierCommaList&gt; COLON &lt;type&gt;</li>
+<li>&lt;argumentDef&gt; ::= · &lt;identifierCommaList&gt; COLON &lt;type&gt;</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER COMMA &lt;identifierCommaList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State193">193</a><br>
+<b>Transitions:</b> <a href="#State195">195</a>(&lt;nonemptyArgumentDefs&gt;), <a href="#State193">193</a>(&lt;argumentDef&gt;), <a href="#State196">196</a>(VAR), <a href="#State200">200</a>(&lt;identifierCommaList&gt;), <a href="#State165">165</a>(IDENTIFIER)<br>
+<a name="State195" id="State195"/><h3>State 195</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;nonemptyArgumentDefs&gt; ::= &lt;argumentDef&gt; SEMICOLON &lt;nonemptyArgumentDefs&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State194">194</a><br>
+<b>Transitions:</b> <br>
+<a name="State196" id="State196"/><h3>State 196</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;argumentDef&gt; ::= VAR · &lt;identifierCommaList&gt; COLON &lt;type&gt;</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER</li>
+<li>&lt;identifierCommaList&gt; ::= · IDENTIFIER COMMA &lt;identifierCommaList&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State194">194</a>, <a href="#State189">189</a><br>
+<b>Transitions:</b> <a href="#State197">197</a>(&lt;identifierCommaList&gt;), <a href="#State165">165</a>(IDENTIFIER)<br>
+<a name="State197" id="State197"/><h3>State 197</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;argumentDef&gt; ::= VAR &lt;identifierCommaList&gt; · COLON &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State196">196</a><br>
+<b>Transitions:</b> <a href="#State198">198</a>(COLON)<br>
+<a name="State198" id="State198"/><h3>State 198</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;argumentDef&gt; ::= VAR &lt;identifierCommaList&gt; COLON · &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State197">197</a><br>
+<b>Transitions:</b> <a href="#State199">199</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State199" id="State199"/><h3>State 199</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;argumentDef&gt; ::= VAR &lt;identifierCommaList&gt; COLON &lt;type&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State198">198</a><br>
+<b>Transitions:</b> <br>
+<a name="State200" id="State200"/><h3>State 200</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;argumentDef&gt; ::= &lt;identifierCommaList&gt; · COLON &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State194">194</a>, <a href="#State189">189</a><br>
+<b>Transitions:</b> <a href="#State201">201</a>(COLON)<br>
+<a name="State201" id="State201"/><h3>State 201</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;argumentDef&gt; ::= &lt;identifierCommaList&gt; COLON · &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State200">200</a><br>
+<b>Transitions:</b> <a href="#State202">202</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State202" id="State202"/><h3>State 202</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;argumentDef&gt; ::= &lt;identifierCommaList&gt; COLON &lt;type&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State201">201</a><br>
+<b>Transitions:</b> <br>
+<a name="State203" id="State203"/><h3>State 203</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;function&gt; ::= &lt;functionHeader&gt; · &lt;variables&gt; &lt;subroutineBody&gt;</li>
+<li>&lt;function&gt; ::= &lt;functionHeader&gt; · &lt;subroutineBody&gt;</li>
+<li>&lt;subroutineBody&gt; ::= · BEGIN &lt;statementList&gt; END SEMICOLON</li>
+<li>&lt;variables&gt; ::= · VAR &lt;variableDefs&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <a href="#State204">204</a>(&lt;variables&gt;), <a href="#State206">206</a>(&lt;subroutineBody&gt;), <a href="#State133">133</a>(BEGIN), <a href="#State138">138</a>(VAR)<br>
+<a name="State204" id="State204"/><h3>State 204</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;function&gt; ::= &lt;functionHeader&gt; &lt;variables&gt; · &lt;subroutineBody&gt;</li>
+<li>&lt;subroutineBody&gt; ::= · BEGIN &lt;statementList&gt; END SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State203">203</a><br>
+<b>Transitions:</b> <a href="#State205">205</a>(&lt;subroutineBody&gt;), <a href="#State133">133</a>(BEGIN)<br>
+<a name="State205" id="State205"/><h3>State 205</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;function&gt; ::= &lt;functionHeader&gt; &lt;variables&gt; &lt;subroutineBody&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State204">204</a><br>
+<b>Transitions:</b> <br>
+<a name="State206" id="State206"/><h3>State 206</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;function&gt; ::= &lt;functionHeader&gt; &lt;subroutineBody&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State203">203</a><br>
+<b>Transitions:</b> <br>
+<a name="State207" id="State207"/><h3>State 207</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;functionHeader&gt; ::= FUNCTION · IDENTIFIER &lt;arguments&gt; COLON &lt;type&gt; SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <a href="#State208">208</a>(IDENTIFIER)<br>
+<a name="State208" id="State208"/><h3>State 208</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;arguments&gt; ::= ·<br>
+{COLON}</li>
+<li>&lt;functionHeader&gt; ::= FUNCTION IDENTIFIER · &lt;arguments&gt; COLON &lt;type&gt; SEMICOLON</li>
+<li>&lt;arguments&gt; ::= · LPAREN &lt;argumentDefs&gt; RPAREN</li>
+</ul>
+<b>Accessing states:</b> <a href="#State207">207</a><br>
+<b>Transitions:</b> <a href="#State209">209</a>(&lt;arguments&gt;), <a href="#State189">189</a>(LPAREN)<br>
+<a name="State209" id="State209"/><h3>State 209</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;functionHeader&gt; ::= FUNCTION IDENTIFIER &lt;arguments&gt; · COLON &lt;type&gt; SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State208">208</a><br>
+<b>Transitions:</b> <a href="#State210">210</a>(COLON)<br>
+<a name="State210" id="State210"/><h3>State 210</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;functionHeader&gt; ::= FUNCTION IDENTIFIER &lt;arguments&gt; COLON · &lt;type&gt; SEMICOLON</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State209">209</a><br>
+<b>Transitions:</b> <a href="#State211">211</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State211" id="State211"/><h3>State 211</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;functionHeader&gt; ::= FUNCTION IDENTIFIER &lt;arguments&gt; COLON &lt;type&gt; · SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State210">210</a><br>
+<b>Transitions:</b> <a href="#State212">212</a>(SEMICOLON)<br>
+<a name="State212" id="State212"/><h3>State 212</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;functionHeader&gt; ::= FUNCTION IDENTIFIER &lt;arguments&gt; COLON &lt;type&gt; SEMICOLON ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State211">211</a><br>
+<b>Transitions:</b> <br>
+<a name="State213" id="State213"/><h3>State 213</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;types&gt; ::= TYPE · &lt;typeDefs&gt;</li>
+<li>&lt;typeDefs&gt; ::= · &lt;typeDef&gt;</li>
+<li>&lt;typeDefs&gt; ::= · &lt;typeDef&gt; &lt;typeDefs&gt;</li>
+<li>&lt;typeDef&gt; ::= · IDENTIFIER EQ &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <a href="#State214">214</a>(&lt;typeDefs&gt;), <a href="#State215">215</a>(&lt;typeDef&gt;), <a href="#State217">217</a>(IDENTIFIER)<br>
+<a name="State214" id="State214"/><h3>State 214</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;types&gt; ::= TYPE &lt;typeDefs&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State213">213</a><br>
+<b>Transitions:</b> <br>
+<a name="State215" id="State215"/><h3>State 215</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;typeDefs&gt; ::= &lt;typeDef&gt; ·<br>
+{BEGIN, CONST, FUNCTION, PROCEDURE, TYPE, VAR, PREPROC}</li>
+<li>&lt;typeDefs&gt; ::= &lt;typeDef&gt; · &lt;typeDefs&gt;</li>
+<li>&lt;typeDefs&gt; ::= · &lt;typeDef&gt;</li>
+<li>&lt;typeDefs&gt; ::= · &lt;typeDef&gt; &lt;typeDefs&gt;</li>
+<li>&lt;typeDef&gt; ::= · IDENTIFIER EQ &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State215">215</a>, <a href="#State213">213</a><br>
+<b>Transitions:</b> <a href="#State216">216</a>(&lt;typeDefs&gt;), <a href="#State215">215</a>(&lt;typeDef&gt;), <a href="#State217">217</a>(IDENTIFIER)<br>
+<a name="State216" id="State216"/><h3>State 216</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;typeDefs&gt; ::= &lt;typeDef&gt; &lt;typeDefs&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State215">215</a><br>
+<b>Transitions:</b> <br>
+<a name="State217" id="State217"/><h3>State 217</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;typeDef&gt; ::= IDENTIFIER · EQ &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State215">215</a>, <a href="#State213">213</a><br>
+<b>Transitions:</b> <a href="#State218">218</a>(EQ)<br>
+<a name="State218" id="State218"/><h3>State 218</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;typeDef&gt; ::= IDENTIFIER EQ · &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State217">217</a><br>
+<b>Transitions:</b> <a href="#State219">219</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State219" id="State219"/><h3>State 219</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;typeDef&gt; ::= IDENTIFIER EQ &lt;type&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State218">218</a><br>
+<b>Transitions:</b> <br>
+<a name="State220" id="State220"/><h3>State 220</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;constants&gt; ::= CONST · &lt;constantList&gt;</li>
+<li>&lt;constantList&gt; ::= · &lt;constant&gt;</li>
+<li>&lt;constantList&gt; ::= · &lt;constant&gt; &lt;constantList&gt;</li>
+<li>&lt;constant&gt; ::= · IDENTIFIER COLON &lt;type&gt; EQ &lt;expression&gt; SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State121">121</a>, <a href="#State3">3</a><br>
+<b>Transitions:</b> <a href="#State221">221</a>(&lt;constantList&gt;), <a href="#State222">222</a>(&lt;constant&gt;), <a href="#State224">224</a>(IDENTIFIER)<br>
+<a name="State221" id="State221"/><h3>State 221</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;constants&gt; ::= CONST &lt;constantList&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State220">220</a><br>
+<b>Transitions:</b> <br>
+<a name="State222" id="State222"/><h3>State 222</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;constantList&gt; ::= &lt;constant&gt; ·<br>
+{BEGIN, CONST, FUNCTION, PROCEDURE, TYPE, VAR, PREPROC}</li>
+<li>&lt;constantList&gt; ::= &lt;constant&gt; · &lt;constantList&gt;</li>
+<li>&lt;constantList&gt; ::= · &lt;constant&gt;</li>
+<li>&lt;constantList&gt; ::= · &lt;constant&gt; &lt;constantList&gt;</li>
+<li>&lt;constant&gt; ::= · IDENTIFIER COLON &lt;type&gt; EQ &lt;expression&gt; SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State222">222</a>, <a href="#State220">220</a><br>
+<b>Transitions:</b> <a href="#State223">223</a>(&lt;constantList&gt;), <a href="#State222">222</a>(&lt;constant&gt;), <a href="#State224">224</a>(IDENTIFIER)<br>
+<a name="State223" id="State223"/><h3>State 223</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;constantList&gt; ::= &lt;constant&gt; &lt;constantList&gt; ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State222">222</a><br>
+<b>Transitions:</b> <br>
+<a name="State224" id="State224"/><h3>State 224</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;constant&gt; ::= IDENTIFIER · COLON &lt;type&gt; EQ &lt;expression&gt; SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State222">222</a>, <a href="#State220">220</a><br>
+<b>Transitions:</b> <a href="#State225">225</a>(COLON)<br>
+<a name="State225" id="State225"/><h3>State 225</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;constant&gt; ::= IDENTIFIER COLON · &lt;type&gt; EQ &lt;expression&gt; SEMICOLON</li>
+<li>&lt;type&gt; ::= · IDENTIFIER</li>
+<li>&lt;type&gt; ::= · ARRAY OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · ARRAY LBRACKET &lt;ordinalIntervals&gt; RBRACKET OF &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · RECORD &lt;memberDefs&gt; END SEMICOLON</li>
+<li>&lt;type&gt; ::= · CARET &lt;type&gt;</li>
+<li>&lt;type&gt; ::= · FILE OF &lt;type&gt;</li>
+</ul>
+<b>Accessing states:</b> <a href="#State224">224</a><br>
+<b>Transitions:</b> <a href="#State226">226</a>(&lt;type&gt;), <a href="#State146">146</a>(IDENTIFIER), <a href="#State147">147</a>(ARRAY), <a href="#State150">150</a>(RECORD), <a href="#State160">160</a>(CARET), <a href="#State162">162</a>(FILE)<br>
+<a name="State226" id="State226"/><h3>State 226</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;constant&gt; ::= IDENTIFIER COLON &lt;type&gt; · EQ &lt;expression&gt; SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State225">225</a><br>
+<b>Transitions:</b> <a href="#State227">227</a>(EQ)<br>
+<a name="State227" id="State227"/><h3>State 227</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;constant&gt; ::= IDENTIFIER COLON &lt;type&gt; EQ · &lt;expression&gt; SEMICOLON</li>
+<li>&lt;expression&gt; ::= · &lt;simpleExpression&gt;</li>
+<li>&lt;expression&gt; ::= · &lt;relationalExpression&gt;</li>
+<li>&lt;relationalExpression&gt; ::= · &lt;simpleExpression&gt; &lt;relationalOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt; &lt;additiveOperator&gt; &lt;simpleExpression&gt;</li>
+<li>&lt;simpleExpression&gt; ::= · &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt; &lt;multiplicativeOperator&gt; &lt;term&gt;</li>
+<li>&lt;term&gt; ::= · &lt;factor&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;computedValue&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;literal&gt;</li>
+<li>&lt;factor&gt; ::= · &lt;unaryExpression&gt;</li>
+<li>&lt;factor&gt; ::= · LPAREN &lt;expression&gt; RPAREN</li>
+<li>&lt;unaryExpression&gt; ::= · &lt;unaryOperator&gt; &lt;factor&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · &lt;sign&gt;</li>
+<li>&lt;unaryOperator&gt; ::= · NOT</li>
+<li>&lt;sign&gt; ::= · PLUS</li>
+<li>&lt;sign&gt; ::= · MINUS</li>
+<li>&lt;literal&gt; ::= · STRING</li>
+<li>&lt;literal&gt; ::= · CHAR</li>
+<li>&lt;literal&gt; ::= · INTEGER</li>
+<li>&lt;literal&gt; ::= · REAL</li>
+<li>&lt;literal&gt; ::= · NIL</li>
+<li>&lt;computedValue&gt; ::= · &lt;simpleValue&gt; &lt;qualifiers&gt;</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER LPAREN &lt;expressionCommaList&gt; RPAREN</li>
+<li>&lt;simpleValue&gt; ::= · IDENTIFIER</li>
+</ul>
+<b>Accessing states:</b> <a href="#State226">226</a><br>
+<b>Transitions:</b> <a href="#State228">228</a>(&lt;expression&gt;), <a href="#State40">40</a>(&lt;simpleExpression&gt;), <a href="#State55">55</a>(&lt;relationalExpression&gt;), <a href="#State43">43</a>(&lt;term&gt;), <a href="#State46">46</a>(&lt;factor&gt;), <a href="#State49">49</a>(&lt;computedValue&gt;), <a href="#State50">50</a>(&lt;literal&gt;), <a href="#State51">51</a>(&lt;unaryExpression&gt;), <a href="#State52">52</a>(LPAREN), <a href="#State56">56</a>(&lt;unaryOperator&gt;), <a href="#State58">58</a>(&lt;sign&gt;), <a href="#State59">59</a>(NOT), <a href="#State60">60</a>(PLUS), <a href="#State61">61</a>(MINUS), <a href="#State62">62</a>(STRING), <a href="#State63">63</a>(CHAR), <a href="#State64">64</a>(INTEGER), <a href="#State65">65</a>(REAL), <a href="#State66">66</a>(NIL), <a href="#State67">67</a>(&lt;simpleValue&gt;), <a href="#State80">80</a>(IDENTIFIER)<br>
+<a name="State228" id="State228"/><h3>State 228</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;constant&gt; ::= IDENTIFIER COLON &lt;type&gt; EQ &lt;expression&gt; · SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State227">227</a><br>
+<b>Transitions:</b> <a href="#State229">229</a>(SEMICOLON)<br>
+<a name="State229" id="State229"/><h3>State 229</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;constant&gt; ::= IDENTIFIER COLON &lt;type&gt; EQ &lt;expression&gt; SEMICOLON ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State228">228</a><br>
+<b>Transitions:</b> <br>
+<a name="State230" id="State230"/><h3>State 230</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;header&gt; ::= PROGRAM · IDENTIFIER SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State0">0</a><br>
+<b>Transitions:</b> <a href="#State231">231</a>(IDENTIFIER)<br>
+<a name="State231" id="State231"/><h3>State 231</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;header&gt; ::= PROGRAM IDENTIFIER · SEMICOLON</li>
+</ul>
+<b>Accessing states:</b> <a href="#State230">230</a><br>
+<b>Transitions:</b> <a href="#State232">232</a>(SEMICOLON)<br>
+<a name="State232" id="State232"/><h3>State 232</h3>
+<b>Items:</b>
+<ul>
+<li>&lt;header&gt; ::= PROGRAM IDENTIFIER SEMICOLON ·</li>
+</ul>
+<b>Accessing states:</b> <a href="#State231">231</a><br>
+<b>Transitions:</b> <br>
+</body>
+</html>
