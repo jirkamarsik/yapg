@@ -1,1 +1,5 @@
 YetAnotherParserGenerator/obj/
+.*.swp
+.~lock.*#
+*.userprefs
+*.pidb
