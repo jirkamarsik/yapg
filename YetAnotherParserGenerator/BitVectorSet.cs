@@ -16,7 +16,7 @@ namespace YetAnotherParserGenerator.Utilities
         private int capacity;
         private int[] bitVectors;
 
-        //statický konstruktor nám připraví předpočítá bitové masky pro pohodlnější přístup do bitových vektorů
+        //statický konstruktor nám připraví bitové masky pro pohodlnější přístup do bitových vektorů
         static BitVectorSet()
         {
             bitMasks = new int[32];

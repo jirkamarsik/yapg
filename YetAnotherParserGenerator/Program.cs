@@ -24,7 +24,7 @@ logFile.html if logFile is not specified. If logFile is specified, the log
 will be produced even if the grammar is LALR(1). The '-f' option instructs
 the grammar processor to compute LALR(1) lookahead sets for all final items
 in all conflicting states, even though their conflicts could be resolved
-via SLR(1) lookahead sets. Using the '-f' option generally resutlts in longer
+via SLR(1) lookahead sets. Using the '-f' option generally results in longer
 processing time but creates a parser with better error reporting.
 
 'yapg run' reads the binary runtime data of a parser from parserFile and

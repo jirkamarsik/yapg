@@ -3,3 +3,5 @@ YetAnotherParserGenerator/obj/
 .~lock.*#
 *.userprefs
 *.pidb
+*.exe
+*.mdb
