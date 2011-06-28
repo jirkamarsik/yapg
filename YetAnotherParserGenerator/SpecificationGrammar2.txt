@@ -2,16 +2,23 @@
 
 (?m)
 
-DERIVES=::=
-OR=\|
+HEADER=%header\b
+HEADER_CODE=
+LEXER=%lexer\b
+NULL=%null\b
+IDENTIFIER=\w+
+REGEXOPTS=\(\?[imnsx\-]+\)
+EQUALS==
+REGEX=.*
+PARSER=%parser\b
+START=%start\b
+TYPE=%type\b
+DOT=\.
 LANGLE=\<
 RANGLE=\>
-SEMICOLON=;
-REGEXOPTS=\(\?[imnsx\-]+\)
-NULL=(?i)%null\b
-START=(?i)%start\b
-TOKENDEF=\w+=[^\r\n]*
-IDENTIFIER=\w+
+DERIVES=::=
+CODE=
+OR=\|
 VOID=\s+
 VOID=#.*
 
@@ -24,15 +31,18 @@ VOID=#.*
 <lexer> ::= LEXER <nullDef> <regexOpts> <tokenDefs>;
 <nullDef> ::= NULL IDENTIFIER | ;
 <regexOpts> ::= REGEXOPTS | ; 
-<tokenDefs> ::= TOKENDEF | TOKENDEF <tokenDefs>;
+<tokenDefs> ::= <tokenDef> | <tokenDef> <tokenDefs>;
+<tokenDef> ::= IDENTIFIER EQUALS REGEX;
 
-<parser> ::= <startDef> <parserDefs>;
+<parser> ::= PARSER <startDef> <parserDefs>;
 <startDef> ::= START IDENTIFIER;
 <parserDefs> ::= <parserDef> | <parserDef> <parserDefs>;
 <parserDef> ::= <rule> | <typeAssignment>;
-<typeAssignment> ::= TYPE IDENTIFIER TYPENAME
+<typeAssignment> ::= TYPE IDENTIFIER <typeName>;
+<typeName> ::= IDENTIFIER <specificName>;
+<specificName> ::= DOT IDENTIFIER <specificName> | ;
 
-<rule> ::= <nonterminal> DERIVES <expression> SEMICOLON;
+<rule> ::= <nonterminal> DERIVES <expression>;
 <expression> ::= <symbolList> CODE | <symbolList> CODE OR <expression>;
 <symbolList> ::= <symbol> <symbolList> | ;
 <symbol> ::= <nonterminal> | <terminal>;
