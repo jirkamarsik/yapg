@@ -183,21 +183,29 @@ namespace YetAnotherParserGenerator
         int position = 0, lineNumber = 1, columnNumber = 1;
         string input = "";
         bool hasTokens = false;
+		private int previousSymbolCode = code_skip;
         
+        // Symbol codes for the various tokens used by the GrammarLexer
+		// and the GrammarParser.
 		private static readonly int code_skip = -1, code_end = 0, code_header = 1,
 			code_headerCode = 2, code_lexer = 3, code_null = 4, code_identifier = 5,
 			code_regexopts = 6, code_equals = 7, code_regex = 8, code_parser = 9,
 			code_start = 10, code_type = 11, code_dot = 12, code_lAngle = 13,
 			code_rAngle = 14, code_derives = 15, code_code = 16, code_or = 17;
 		
-		private static readonly Regex identifier = new Regex("\\w+"),
-									  whitespace = new Regex("\\s+"),
-									  regexopts = new Regex("\\(\\?[imnsx\\-]+\\)"),
-									  endOfHeader = new Regex("^\\s*%lexer\\b", RegexOptions.Multiline),
-								      singleQuoteContents = new Regex("([^\\']|\\.)*"),
-								      doubleQuoteContents = new Regex("([^\\\"]|\\.)*");
+		// Regular expressions to help with the tokenization of the grammar
+		// specification.
+		private static readonly Regex re_identifier = new Regex("\\w+"),
+									  re_whitespace = new Regex("\\s+"),
+									  re_regexOpts = new Regex("\\(\\?[imnsx\\-]+\\)"),
+									  re_endOfHeader = new Regex("^\\s*%lexer\\b", RegexOptions.Multiline),
+								      re_singleQuoteContents = new Regex("([^\\\\']|\\.)*"),
+								      re_doubleQuoteContents = new Regex("([^\\\\\"]|\\\\.)*");
 		
-		private int previousSymbolCode = code_skip;
+		
+		private void reportParsingError(string message) {
+			throw new ParsingException(message, this.lineNumber, this.columnNumber);
+		}
         
         /// <summary>
         /// Fetches the next token from the source string.
@@ -209,13 +217,17 @@ namespace YetAnotherParserGenerator
             {
             	int matchLength = 0;
             	int symbolCode = -2;
+            	
+            	// HEADER_CODE, the code that is to be put at the beginning of the
+				// generated source file
 	        	if (previousSymbolCode == code_header) {
 	        		symbolCode = code_headerCode;
-	        		var endOfHeaderMatch = endOfHeader.Match(input, position);
+	        		var endOfHeaderMatch = re_endOfHeader.Match(input, position);
 					if (!endOfHeaderMatch.Success)
 						matchLength = input.Length - position;
 					else
 						matchLength = endOfHeaderMatch.Index - position;
+				// REGEX, a regular expression defining a token
 				} else if (previousSymbolCode == code_equals) {
 					symbolCode = code_regex;
 					int endOfLine = input.IndexOf('\n', position);
@@ -249,11 +261,28 @@ namespace YetAnotherParserGenerator
 						symbolCode = code_derives;
 						matchLength = 3;
 					} else {
-						// TODO: Scream about malformed operator.
+						reportParsingError(string.Format("Unexpected character '{0}' following ':'.", input[position + 1]));
 					}
 					break;
+				case '(':
+					var match = re_regexOpts.Match(input, position);
+					if (match.Index == position) {
+						symbolCode = code_regexopts;
+						matchLength = match.Length;
+					} else {
+						reportParsingError(string.Format("\"{0}\" is not a proper regular expression option setter."));
+					}
+					break;
+				case '#':
+					int endOfLine = input.IndexOf('\n', position + 1);
+					symbolCode = code_skip;
+					if (endOfLine == -1)
+						matchLength = input.Length - position;
+					else
+						matchLength = (endOfLine + 1) - position;
+					break;
 				case '%':
-					var keyword = identifier.Match(input, position + 1);
+					var keyword = re_identifier.Match(input, position + 1);
 					switch (keyword.Value) {
 					case "header":
 						symbolCode = code_header;
@@ -274,7 +303,7 @@ namespace YetAnotherParserGenerator
 						symbolCode = code_type;
 						break;
 					default:
-						// TODO: Scream about unknown keyword.
+						reportParsingError(string.Format("Unknown keyword \"%{0}\".", keyword.Value));
 						break;
 					}
 					matchLength = 1 + keyword.Length;
@@ -314,7 +343,7 @@ namespace YetAnotherParserGenerator
 						case '\'':
 						case '"':
 							char quote = input[blockPosition];
-							Regex quoteContents = quote == '"' ? doubleQuoteContents : singleQuoteContents;
+							Regex quoteContents = quote == '"' ? re_doubleQuoteContents : re_singleQuoteContents;
 							int literalLength = quoteContents.Match(input, blockPosition + 1).Length;
 							blockPosition += 1 + literalLength + 1;
 							break;
@@ -326,35 +355,18 @@ namespace YetAnotherParserGenerator
 					symbolCode = code_code;
 					matchLength = blockPosition - position;
 					break;
-				case '(':
-					var match = regexopts.Match(input, position);
-					if (match.Index == position) {
-						symbolCode = code_regexopts;
-						matchLength = match.Length;
-					} else {
-						// TODO: Scream about malformed regexopts.
-					}
-					break;
-				case '#':
-					int endOfLine = input.IndexOf('\n', position + 1);
-					symbolCode = code_skip;
-					if (endOfLine == -1)
-						matchLength = input.Length - position;
-					else
-						matchLength = (endOfLine + 1) - position;
-					break;
 				default:
-					var whitespace_match = whitespace.Match(input, position);
+					var whitespace_match = re_whitespace.Match(input, position);
 					if (whitespace_match.Index == position) {
 						symbolCode = code_skip;
 						matchLength = whitespace_match.Length;
 					} else {
-						var identifier_match = identifier.Match(input, position);
+						var identifier_match = re_identifier.Match(input, position);
 						if (identifier_match.Index == position) {
 							symbolCode = code_identifier;
 							matchLength = identifier_match.Length;
 						} else {
-							//TODO: Scream about unexpected character.
+							reportParsingError(string.Format("Unexpected character '{0}'.", input[position]));
 						}
 					}
 					break;
