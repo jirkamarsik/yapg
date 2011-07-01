@@ -13,6 +13,11 @@ namespace YetAnotherParserGenerator
     /// </summary>
     public class GrammarDefinition
     {
+        private string[] symbolNames;
+        private Production[] productions;
+        private int[] nonterminalProductionOffset;
+        private int numTerminals;
+        
         /// <summary>
         /// Creates an instance of GrammarDefinition and fills it with all the data it needs.
         /// </summary>
@@ -29,7 +34,6 @@ namespace YetAnotherParserGenerator
             this.numTerminals = numTerminals;
         }
 
-        private string[] symbolNames;
         /// <summary>
         /// Gets an array of symbol names for each symbol used in the grammar, indexed by symbol codes.
         /// </summary>
@@ -43,7 +47,6 @@ namespace YetAnotherParserGenerator
         /// Gets the number of productions defined in the grammar.
         /// </summary>
         public int NumProductions { get { return productions.Length; } }
-        private Production[] productions;
 
         /// <summary>
         /// Gets an array of indices into the <i>productions</i> array.
@@ -51,13 +54,11 @@ namespace YetAnotherParserGenerator
         /// </summary>
         public int[] NonterminalProductionOffset
         { get { return nonterminalProductionOffset; } }
-        private int[] nonterminalProductionOffset;
 
         /// <summary>
         /// Gets the number of terminals defined in the grammar.
         /// </summary>
         public int NumTerminals { get { return numTerminals; } }
-        private int numTerminals;
 
         /// <summary>
         /// Gets the number of nonterminals defined in the grammar.
@@ -76,6 +77,8 @@ namespace YetAnotherParserGenerator
     [Serializable]
     public class LexerData
     {
+        private Regex regex;
+        private List<int> groupSymbolCodes;
         /// <summary>
         /// Creates an instance of LexerData and initializes it with all the needed data.
         /// </summary>
@@ -117,7 +120,6 @@ namespace YetAnotherParserGenerator
         /// </summary>
         public Regex Regex
         { get { return regex; } }
-        private Regex regex;
 
         /// <summary>
         /// Gets an array of symbol codes defining what token should be returned when a given capture group matches a string.
@@ -126,7 +128,6 @@ namespace YetAnotherParserGenerator
         /// </summary>
         public List<int> GroupSymbolCodes
         { get { return groupSymbolCodes; } }
-        private List<int> groupSymbolCodes;
     }
 
     /// <summary>
@@ -135,6 +136,11 @@ namespace YetAnotherParserGenerator
     [Serializable]
     public class ParserData
     {
+        private ParserAction[,] parseTable;
+        private int[,] gotoTable;
+        private string[] symbolNames;
+        private ProductionOutline[] productions;
+        
         /// <summary>
         /// Creates a new instance of ParserData and initializes the properties which can be read
         /// directly from the grammar specification.
@@ -185,7 +191,6 @@ namespace YetAnotherParserGenerator
             get { return parseTable; }
             set { parseTable = value; }
         }
-        private ParserAction[,] parseTable;
 
         /// <summary>
         /// Gets or sets the goto table, which is a 2D array indexed by state numbers and nonterminal symbol
@@ -197,14 +202,12 @@ namespace YetAnotherParserGenerator
             get { return gotoTable; }
             set { gotoTable = value; }
         }
-        private int[,] gotoTable;
 
         /// <summary>
         /// Gets an array of symbol names for each symbol used in the grammar, indexed by symbol codes.
         /// </summary>
         public string[] SymbolNames
         { get { return symbolNames; } }
-        private string[] symbolNames;
 
         /// <summary>
         /// Gets an array containing stripped down copies of productions of the grammar, containing only
@@ -212,7 +215,6 @@ namespace YetAnotherParserGenerator
         /// </summary>
         public ProductionOutline[] Productions
         { get { return productions; } }
-        private ProductionOutline[] productions;
     }
 
     /// <summary>
@@ -220,6 +222,9 @@ namespace YetAnotherParserGenerator
     /// </summary>
     public class Grammar
     {
+        private LexerData lexerData;
+        private ParserData parserData;
+        
         /// <summary>
         /// Creates a new Grammar instance and sets it's GrammarDefiniton and LexerData properties to provided values.
         /// The ParserData structure will be initialized and it's ProductionOutlines and SymbolNames properties will be set.
@@ -343,13 +348,11 @@ namespace YetAnotherParserGenerator
         /// </summary>
         public LexerData LexerData
         { get { return lexerData; } }
-        private LexerData lexerData;
 
         /// <summary>
         /// Gets the ParserData which contains all the necessary runtime information for the parser.
         /// </summary>
         public ParserData ParserData
         { get { return parserData; } }
-        private ParserData parserData;
     }
 }

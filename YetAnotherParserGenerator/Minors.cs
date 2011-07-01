@@ -76,6 +76,10 @@ namespace YetAnotherParserGenerator
     /// </summary>
     public class Production
     {
+        private int productionCode;
+        private int lhsSymbol;
+        private List<int> rhsSymbols;
+        
         /// <summary>
         /// Creates a production with an empty right-hand side.
         /// </summary>
@@ -105,19 +109,16 @@ namespace YetAnotherParserGenerator
         /// Gets the ordinal code of the production.
         /// </summary>
         public int ProductionCode { get { return productionCode; } set { productionCode = value; } }
-        private int productionCode;
 
         /// <summary>
         /// Gets the left-hand side symbol's code.
         /// </summary>
         public int LHSSymbol { get { return lhsSymbol; } }
-        private int lhsSymbol;
 
         /// <summary>
         /// Gets the right-hand side symbols' codes of the production.
         /// </summary>
         public List<int> RHSSymbols { get { return rhsSymbols; } }
-        private List<int> rhsSymbols;
     }
 
     /// <summary>
@@ -126,6 +127,9 @@ namespace YetAnotherParserGenerator
     [Serializable]
     public class ProductionOutline
     {
+        private int lhsSymbol;
+        private int numRhsSymbols;
+        
         /// <summary>
         /// Creates a new instance of ProductionOutline with all needed information.
         /// </summary>
@@ -141,13 +145,11 @@ namespace YetAnotherParserGenerator
         /// Gets the left-hand side symbol's code.
         /// </summary>
         public int LHSSymbol { get { return lhsSymbol; } }
-        private int lhsSymbol;
 
         /// <summary>
         /// Gets the number of symbols on the right-hand side of the productions.
         /// </summary>
         public int NumRHSSymbols { get { return numRhsSymbols; } }
-        private int numRhsSymbols;
     }
 
     /// <summary>
@@ -155,6 +157,11 @@ namespace YetAnotherParserGenerator
     /// </summary>
     public class State
     {
+        private int stateNumber;
+        private ItemSet itemSet;
+        private List<Transition> transitions = new List<Transition>();
+        private List<State> accessingStates = new List<State>();
+        
         /// <summary>
         /// Creates a new State with the supplied number and ItemSet.
         /// </summary>
@@ -170,25 +177,21 @@ namespace YetAnotherParserGenerator
         /// Gets the number of the state.
         /// </summary>
         public int StateNumber { get { return stateNumber; } }
-        private int stateNumber;
 
         /// <summary>
         /// Gets the ItemSet defining this state.
         /// </summary>
         public ItemSet ItemSet { get { return itemSet; } }
-        private ItemSet itemSet;
 
         /// <summary>
         /// Gets the collection of transitions leading from this state.
         /// </summary>
         public List<Transition> Transitions { get { return transitions; } }
-        private List<Transition> transitions = new List<Transition>();
 
         /// <summary>
         /// Gets the collection of states accessing this state.
         /// </summary>
         public List<State> AccessingStates { get { return accessingStates; } }
-        private List<State> accessingStates = new List<State>();
     }
 
     /// <summary>
@@ -196,23 +199,24 @@ namespace YetAnotherParserGenerator
     /// </summary>
     public abstract class Transition
     {
+        protected int transitionSymbol;
+        protected State source;
+        protected State destination;
+        
         /// <summary>
         /// Gets the transition symbol's code.
         /// </summary>
         public int TransitionSymbol { get { return transitionSymbol; } }
-        protected int transitionSymbol;
 
         /// <summary>
         /// Gets the State where this transition originates.
         /// </summary>
         public State Source { get { return source; } }
-        protected State source;
 
         /// <summary>
         /// Gets the State to which this transition leads.
         /// </summary>
         public State Destination { get { return destination; } }
-        protected State destination;
     }
 
     /// <summary>
@@ -241,6 +245,8 @@ namespace YetAnotherParserGenerator
     /// </summary>
     public class NonterminalTransition : Transition
     {
+        private int nonterminalTransitionNumber;
+        
         /// <summary>
         /// Creates a new NonterminalTransition from <i>source</i> to <i>destination</i> under <i>transitionSymbol</i>.
         /// The transition still has to be added to the Transitions of <i>source</i> and <i>source</i> should
@@ -262,6 +268,5 @@ namespace YetAnotherParserGenerator
         /// Gets the ordinal number of this nonterminal transition.
         /// </summary>
         public int NonterminalTransitionNumber { get { return nonterminalTransitionNumber; } }
-        private int nonterminalTransitionNumber;
     }
 }
