@@ -183,15 +183,7 @@ namespace YetAnotherParserGenerator
         int position = 0, lineNumber = 1, columnNumber = 1;
         string input = "";
         bool hasTokens = false;
-		private int previousSymbolCode = code_skip;
-        
-        // Symbol codes for the various tokens used by the GrammarLexer
-		// and the GrammarParser.
-		private static readonly int code_skip = -1, code_end = 0, code_header = 1,
-			code_headerCode = 2, code_lexer = 3, code_null = 4, code_identifier = 5,
-			code_regexopts = 6, code_equals = 7, code_regex = 8, code_parser = 9,
-			code_start = 10, code_type = 11, code_dot = 12, code_lAngle = 13,
-			code_rAngle = 14, code_derives = 15, code_code = 16, code_or = 17;
+		private int previousSymbolCode = GrammarParser.CODE_SKIP;
 		
 		// Regular expressions to help with the tokenization of the grammar
 		// specification.
@@ -217,48 +209,49 @@ namespace YetAnotherParserGenerator
             {
             	int matchLength = 0;
             	int symbolCode = -2;
+            	int endOfLine;
             	
             	// HEADER_CODE, the code that is to be put at the beginning of the
 				// generated source file
-	        	if (previousSymbolCode == code_header) {
-	        		symbolCode = code_headerCode;
+	        	if (previousSymbolCode == GrammarParser.CODE_HEADER) {
+	        		symbolCode = GrammarParser.CODE_HEADERCODE;
 	        		var endOfHeaderMatch = re_endOfHeader.Match(input, position);
 					if (!endOfHeaderMatch.Success)
 						matchLength = input.Length - position;
 					else
 						matchLength = endOfHeaderMatch.Index - position;
 				// REGEX, a regular expression defining a token
-				} else if (previousSymbolCode == code_equals) {
-					symbolCode = code_regex;
-					int endOfLine = input.IndexOf('\n', position);
+				} else if (previousSymbolCode == GrammarParser.CODE_EQUALS) {
+					symbolCode = GrammarParser.CODE_REGEX;
+					endOfLine = input.IndexOf('\n', position);
 					if (endOfLine == -1)
 						matchLength = input.Length - position;
 					else
 						matchLength = endOfLine - position;
 				} else switch (input[position]) {
 				case '<':
-					symbolCode = code_lAngle;
+					symbolCode = GrammarParser.CODE_LANGLE;
 					matchLength = 1;
 					break;
 				case '>':
-					symbolCode = code_rAngle;
+					symbolCode = GrammarParser.CODE_RANGLE;
 					matchLength = 1;
 					break;
 				case '.':
-					symbolCode = code_dot;
+					symbolCode = GrammarParser.CODE_DOT;
 					matchLength = 1;
 					break;
 				case '|':
-					symbolCode = code_or;
+					symbolCode = GrammarParser.CODE_OR;
 					matchLength = 1;
 					break;
 				case '=':
-					symbolCode = code_equals;
+					symbolCode = GrammarParser.CODE_EQUALS;
 					matchLength = 1;
 					break;
 				case ':':
 					if ((input[position + 1] == ':') && (input[position + 2] == '=')) {
-						symbolCode = code_derives;
+						symbolCode = GrammarParser.CODE_DERIVES;
 						matchLength = 3;
 					} else {
 						reportParsingError(string.Format("Unexpected character '{0}' following ':'.", input[position + 1]));
@@ -267,15 +260,15 @@ namespace YetAnotherParserGenerator
 				case '(':
 					var match = re_regexOpts.Match(input, position);
 					if (match.Index == position) {
-						symbolCode = code_regexopts;
+						symbolCode = GrammarParser.CODE_REGEXOPTS;
 						matchLength = match.Length;
 					} else {
 						reportParsingError(string.Format("\"{0}\" is not a proper regular expression option setter."));
 					}
 					break;
 				case '#':
-					int endOfLine = input.IndexOf('\n', position + 1);
-					symbolCode = code_skip;
+					endOfLine = input.IndexOf('\n', position + 1);
+					symbolCode = GrammarParser.CODE_SKIP;
 					if (endOfLine == -1)
 						matchLength = input.Length - position;
 					else
@@ -285,22 +278,22 @@ namespace YetAnotherParserGenerator
 					var keyword = re_identifier.Match(input, position + 1);
 					switch (keyword.Value) {
 					case "header":
-						symbolCode = code_header;
+						symbolCode = GrammarParser.CODE_HEADER;
 						break;
 					case "lexer":
-						symbolCode = code_lexer;
+						symbolCode = GrammarParser.CODE_LEXER;
 						break;
 					case "null":
-						symbolCode = code_null;
+						symbolCode = GrammarParser.CODE_NULL;
 						break;
 					case "parser":
-						symbolCode = code_parser;
+						symbolCode = GrammarParser.CODE_PARSER;
 						break;
 					case "start":
-						symbolCode = code_start;
+						symbolCode = GrammarParser.CODE_START;
 						break;
 					case "type":
-						symbolCode = code_type;
+						symbolCode = GrammarParser.CODE_TYPE;
 						break;
 					default:
 						reportParsingError(string.Format("Unknown keyword \"%{0}\".", keyword.Value));
@@ -323,7 +316,7 @@ namespace YetAnotherParserGenerator
 							break;
 						case '/':
 							if (input[blockPosition + 1] == '/') {
-								int endOfLine = input.IndexOf('\n', blockPosition + 2);
+								endOfLine = input.IndexOf('\n', blockPosition + 2);
 								if (endOfLine == -1) {
 									blockPosition = input.Length;
 								} else {
@@ -352,18 +345,18 @@ namespace YetAnotherParserGenerator
 							break;
 						}
 					}
-					symbolCode = code_code;
+					symbolCode = GrammarParser.CODE_CODE;
 					matchLength = blockPosition - position;
 					break;
 				default:
 					var whitespace_match = re_whitespace.Match(input, position);
 					if (whitespace_match.Index == position) {
-						symbolCode = code_skip;
+						symbolCode = GrammarParser.CODE_SKIP;
 						matchLength = whitespace_match.Length;
 					} else {
 						var identifier_match = re_identifier.Match(input, position);
 						if (identifier_match.Index == position) {
-							symbolCode = code_identifier;
+							symbolCode = GrammarParser.CODE_IDENTIFIER;
 							matchLength = identifier_match.Length;
 						} else {
 							reportParsingError(string.Format("Unexpected character '{0}'.", input[position]));
@@ -408,7 +401,7 @@ namespace YetAnotherParserGenerator
                 finalToken.LineNumber = lineNumber;
                 finalToken.ColumnNumber = columnNumber;
                 //token == $end
-                finalToken.SymbolCode = code_end;
+                finalToken.SymbolCode = GrammarParser.CODE_END;
                 finalToken.Value = "";
 
                 hasTokens = false;
@@ -441,7 +434,7 @@ namespace YetAnotherParserGenerator
                 position = 0;
                 lineNumber = 1;
                 columnNumber = 1;
-                previousSymbolCode = code_skip;
+                previousSymbolCode = GrammarParser.CODE_SKIP;
             }
         }
 	}

@@ -216,25 +216,64 @@ namespace YetAnotherParserGenerator
         public ProductionOutline[] Productions
         { get { return productions; } }
     }
+    
+    /// <summary>
+    /// A class containing all the user code elemetns extracted from the grammar definition file.
+    /// </summary>
+	public class GrammarCode
+	{
+		private string headerCode;
+		private string[] productionActions;
+		private string[] nonterminalTypes;
+		
+		public GrammarCode(string headerCode, string[] productionActions, string[] nonterminalTypes)
+		{
+			this.headerCode = headerCode;
+			this.productionActions = productionActions;
+			this.nonterminalTypes = nonterminalTypes;
+		}
+		
+		/// <summary>
+		/// The code to be inserted at the beginning of the generated source containing
+		/// helper classes and using statements.
+		/// </summary>
+		public string HeaderCode { get { return headerCode; } }
+		
+		/// <summary>
+		/// An array of function bodies. These functions describe what action is to be
+		/// taken when a given the symbols are reduced on the basis of a specific production.
+		/// </summary>
+		public string[] ProductionActions { get { return productionActions; } }
+		
+		/// <summary>
+		/// The names of types of the values carried by the individual nonterminals.
+		/// </summary>
+		public string[] NonterminalTypes { get { return nonterminalTypes; } }
+	}
 
     /// <summary>
     /// Represents a grammar with both it's defining properties and computed data needed by a running parser.
     /// </summary>
     public class Grammar
     {
+        private GrammarDefinition grammarDefinition;
         private LexerData lexerData;
+        private GrammarCode grammarCode;
         private ParserData parserData;
         
         /// <summary>
-        /// Creates a new Grammar instance and sets it's GrammarDefiniton and LexerData properties to provided values.
-        /// The ParserData structure will be initialized and it's ProductionOutlines and SymbolNames properties will be set.
+        /// Creates a new Grammar instance and sets it's GrammarDefiniton, LexerData and 
+        /// GrammarCode properties to provided values. The ParserData structure will be
+        /// initialized and it's ProductionOutlines and SymbolNames properties will be set.
         /// </summary>
         /// <param name="grammarDefinition">The definition of the grammar.</param>
         /// <param name="lexerData">A structure defining the lexer's runtime behaviour.</param>
-        public Grammar(GrammarDefinition grammarDefinition, LexerData lexerData)
+        /// <param name="grammarCode">The collection of user code describing the actions of the parser.</param>
+        public Grammar(GrammarDefinition grammarDefinition, LexerData lexerData, GrammarCode grammarCode)
         {
             this.grammarDefinition = grammarDefinition;
             this.lexerData = lexerData;
+            this.grammarCode = grammarCode;
 
             ProductionOutline[] productionOutlines = new ProductionOutline[grammarDefinition.Productions.Length];
             for (int i = 0; i < productionOutlines.Length; i++)
@@ -307,9 +346,12 @@ namespace YetAnotherParserGenerator
         /// <summary>
         /// Gets the GrammarDefinition containing all the information which can be read directly from the grammar specification.
         /// </summary>
-        public GrammarDefinition GrammarDefinition
-        { get { return grammarDefinition; } }
-        private GrammarDefinition grammarDefinition;
+        public GrammarDefinition GrammarDefinition { get { return grammarDefinition; } }
+        
+        /// <summary>
+        /// Gets the GrammarCode containing all the user-supplied code describing the parser's actions.
+        /// </summary>
+		public GrammarCode GrammarCode { get { return grammarCode; } }
 
         #region GrammarDefinition members
         /// <summary>

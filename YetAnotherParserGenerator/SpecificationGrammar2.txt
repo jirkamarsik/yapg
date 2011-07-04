@@ -35,10 +35,10 @@ VOID=#.*
 <tokenDef> ::= IDENTIFIER EQUALS REGEX;
 
 <parser> ::= PARSER <startDef> <parserDefs>;
-<startDef> ::= START IDENTIFIER;
+<startDef> ::= START <nonterminal>;
 <parserDefs> ::= <parserDef> | <parserDef> <parserDefs>;
 <parserDef> ::= <rule> | <typeAssignment>;
-<typeAssignment> ::= TYPE IDENTIFIER <typeName>;
+<typeAssignment> ::= TYPE <nonterminal> <typeName>;
 <typeName> ::= IDENTIFIER <specificName>;
 <specificName> ::= DOT IDENTIFIER <specificName> | ;
 

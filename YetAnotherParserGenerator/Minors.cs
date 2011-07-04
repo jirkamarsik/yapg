@@ -120,6 +120,17 @@ namespace YetAnotherParserGenerator
         /// </summary>
         public List<int> RHSSymbols { get { return rhsSymbols; } }
     }
+    
+	public class ProductionWithAction {
+		public ProductionWithAction(Production production, string action)
+		{
+			this.Production = production;
+			this.Action = action;
+		}
+		
+		public Production Production;
+		public string Action;
+	}
 
     /// <summary>
     /// A stripped down representation of a production containing only the information by the parser.

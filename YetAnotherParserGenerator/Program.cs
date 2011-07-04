@@ -39,6 +39,28 @@ an ASCII tree to the standard output.";
         /// <param name="args">Command-line arguments (check documentation or usage for more details).</param>
         public static void Main(string[] args)
         {
+        	/*// Testing code
+			GrammarLexer lexer = new GrammarLexer();
+			
+			/*lexer.SourceString = Console.In.ReadToEnd();
+			while (lexer.HasTokens) {
+				Token nextToken = lexer.GetNextToken();
+				Console.Out.WriteLine("{0} - {1} (at {2}:{3})",
+				    nextToken.SymbolCode, nextToken.Value,
+				    nextToken.LineNumber, nextToken.ColumnNumber);
+			}
+			LexerData lexerData;
+			ParserData parserData;
+            Grammar.ReadRuntimeDataFromFile("NewSpecificationGrammar.par", out lexerData, out parserData);
+            Parser parser = new Parser(parserData);
+
+            string input = Console.In.ReadToEnd();
+            lexer.SourceString = input;
+
+            ParseTree parseTree = parser.Parse(lexer);
+            parseTree.DrawAsciiTree(Console.Out);
+			
+			return;*/
             if (args.Length < 1)
             {
                 wrongUse();
@@ -150,7 +172,7 @@ an ASCII tree to the standard output.";
         public static void MakeGrammar(string inputFile, string outputFile, string logFile, bool explicitLogging, bool forceLalr1)
         {
             IList<string> warningMessages;
-            Grammar grammar = GrammarParser.ParseGrammar(new StreamReader(inputFile), out warningMessages);
+            Grammar grammar = GrammarParser.ParseGrammarProgram(new StreamReader(inputFile), out warningMessages);
 
             foreach (string warning in warningMessages)
                 Console.Error.WriteLine(warning);
