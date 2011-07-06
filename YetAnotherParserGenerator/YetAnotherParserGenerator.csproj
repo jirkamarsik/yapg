@@ -72,7 +72,6 @@
     <Compile Include="GrammarReporting.cs" />
     <Compile Include="GrammarProcessor.cs" />
     <Compile Include="ItemSet.cs" />
-    <Compile Include="Minors.cs" />
     <Compile Include="GrammarDataContainers.cs" />
     <Compile Include="GrammarParser.cs" />
     <Compile Include="Lexer.cs" />
@@ -86,7 +85,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TextWriterProxy.cs" />
+    <Compile Include="Minor.cs" />
+    <Compile Include="GrammarCompiler.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

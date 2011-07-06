@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -140,6 +141,7 @@ namespace YetAnotherParserGenerator
         private int[,] gotoTable;
         private string[] symbolNames;
         private ProductionOutline[] productions;
+        private Assembly actionAssembly;
         
         /// <summary>
         /// Creates a new instance of ParserData and initializes the properties which can be read
@@ -215,6 +217,15 @@ namespace YetAnotherParserGenerator
         /// </summary>
         public ProductionOutline[] Productions
         { get { return productions; } }
+        
+        /// <summary>
+        /// Gets the compiled assembly containing the code which is run when reducing symbols in the parser.
+        /// </summary>
+		public Assembly ActionAssembly
+		{
+			get { return actionAssembly; }
+			set { actionAssembly = value; }
+		}
     }
     
     /// <summary>
