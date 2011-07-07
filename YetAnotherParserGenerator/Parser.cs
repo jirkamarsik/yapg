@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace YetAnotherParserGenerator
@@ -10,11 +11,44 @@ namespace YetAnotherParserGenerator
     /// </summary>
     public class Parser
     {
+    	/// <summary>
+    	/// Represents a partial result of the parsing as stored on the parser's stack.
+    	/// </summary>
+    	private struct PartialResult
+		{
+			public PartialResult(object _value, string _symbolName, int _lineNumber, int _columnNumber)
+			{
+				this.Value = _value;
+				this.SymbolName = _symbolName;
+				this.LineNumber = _lineNumber;
+				this.ColumnNumber = _columnNumber;
+			}
+			
+			/// <summary>
+			/// The value returned by the user's code for nonterminals,
+			/// the text spanning the token's width for terminals.
+			/// </summary>
+			public object Value;
+			/// <summary>
+			/// The grammar's name for the symbol.
+			/// </summary>
+			public string SymbolName;
+			/// <summary>
+			/// The number of the line on which the symbol begins.
+			/// </summary>
+			public int LineNumber;
+			/// <summary>
+			/// The number of the column at which the symbol begins.
+			/// </summary>
+			public int ColumnNumber;
+		}
+		
         private ParserAction[,] parseTable;
         private int[,] gotoTable;
         private string[] symbolNames;
         private ProductionOutline[] productions;
         private int numTerminals;
+        private Func<object[], int[], int[], object, object>[] actions;
 
         /// <summary>
         /// Creates a new Parser instance using data stored in a ParserData object.
@@ -27,35 +61,23 @@ namespace YetAnotherParserGenerator
             this.symbolNames = parserData.SymbolNames;
             this.productions = parserData.Productions;
             this.numTerminals = parserData.ParseTable.GetLength(1);
+            
+            Assembly actionAssembly = Assembly.Load(parserData.ActionAssemblyBytes);
+			Type actionCollection = actionAssembly.GetType("YetAnotherParserGenerator.UserGenerated.ActionCollection");
+			MethodInfo retrieveActions = actionCollection.GetMethod("RetrieveActions");
+			this.actions = (Func<object[], int[], int[], object, object>[]) retrieveActions.Invoke(null, new object [] {});
         }
 
         /// <summary>
-        /// Creates a new Parser instance from individual pieces of necessary data.
-        /// </summary>
-        /// <param name="parseTable">The parse table dictating an action for a pair of state/lookahead terminal symbol.</param>
-        /// <param name="gotoTable">A table directing the parser to a new state after reducing to a nonterminal sybmol
-        /// (indexed by state/nonterminal symbol)</param>
-        /// <param name="symbolNames">An array containing the names of the grammars symbols, indexed by symbol codes.</param>
-        /// <param name="productions">An array of the grammar's stripped down productions, indexed by productions' ordinal codes.</param>
-        public Parser(ParserAction[,] parseTable, int[,] gotoTable, string[] symbolNames, ProductionOutline[] productions)
-        {
-            this.parseTable = parseTable;
-            this.gotoTable = gotoTable;
-            this.symbolNames = symbolNames;
-            this.productions = productions;
-            this.numTerminals = parseTable.GetLength(1);
-        }
-
-        /// <summary>
-        /// Parses input tokens supplied by the <i>lexer</i> and returns the resulting ParseTree.
+        /// Parses input tokens supplied by the <i>lexer</i> and returns the result.
         /// </summary>
         /// <param name="lexer">The ILexer which will supply the Parser with tokens.</param>
-        /// <returns>A ParseTree describing the structure of the lexer's output.</returns>
+        /// <returns>An object containing the value returned for the root nonterminal.</returns>
         /// <exception cref="ParsingException">when the lexer's output doesn't conform to the grammar's rules or
         /// when the lexer throws a ParsingException.</exception>
-        public ParseTree Parse(ILexer lexer)
+        public object Parse(ILexer lexer, object userObject)
         {
-            Stack<ParseTree> treeStack = new Stack<ParseTree>();
+        	Stack<PartialResult> resultStack = new Stack<PartialResult>();
             Stack<int> stateStack = new Stack<int>();
 
             //počáteční stav
@@ -71,8 +93,8 @@ namespace YetAnotherParserGenerator
                 switch (nextAction.ActionType)
                 {
                     case ParserActionType.Shift:
-                        treeStack.Push(new ParseTree(symbolNames[nextToken.SymbolCode], nextToken.Value,
-                                                     nextToken.LineNumber, nextToken.ColumnNumber));
+                        resultStack.Push(new PartialResult(nextToken.Value, symbolNames[nextToken.SymbolCode],
+                                                           nextToken.LineNumber, nextToken.ColumnNumber));
                         stateStack.Push(nextAction.Argument);
                         state = stateStack.Peek();
                         nextToken = lexer.GetNextToken();
@@ -81,26 +103,38 @@ namespace YetAnotherParserGenerator
                         //podle informací o patřičném přepisovacím pravidle odebereme ze zásobníků
                         //příslušný počet prvků
                         ProductionOutline production = productions[nextAction.Argument];
-                        Stack<ParseTree> daughters = new Stack<ParseTree>();
+                        Stack<PartialResult> constituents = new Stack<PartialResult>();
                         for (int i = 0; i < production.NumRHSSymbols; i++)
                         {
-                            daughters.Push(treeStack.Pop());
+                            constituents.Push(resultStack.Pop());
                             stateStack.Pop();
                         }
                         state = stateStack.Peek();
 
-                        //stromky z lesního zásobníku poskládáme pod nový strom a ten uložíme na zásobník;
-                        //stav, který ho na zásobník doprovodí, dohledáme v goto tabulce;
-                        //pokud jsme redukovali na neprázdný neterminál, označíme začátek neterminálu
-                        //jako začátek prvního terminálu, což bychom normálně mohli dělat v konstruktoru
-                        //ParseTree, ale je tu zvláštní případ nulovatelných neterminálů a kolekce
-                        //daughters tak někdy může být prázdná, potom musíme číslo řádku a sloupku dodat my
-                        if (daughters.Count > 0)
-                            treeStack.Push(new ParseTree(symbolNames[production.LHSSymbol], daughters,
-                                                         daughters.Peek().LineNumber, daughters.Peek().ColumnNumber));
-                        else
-                            treeStack.Push(new ParseTree(symbolNames[production.LHSSymbol], daughters,
-                                                         nextToken.LineNumber, nextToken.ColumnNumber));
+                        // We take the values of the constituents and compute the value of the composite
+						// element using the relevant action. This new result replaces the old ones on the
+						// result stack; the accompanying state for the state stack is found in the goto
+						// table of the parser. The line and column number for the new result are taken from
+						// the first constituent. If the nonterminal has no constituents, we take the position
+						// of the upcoming token.
+                        int numConstituents = constituents.Count;
+                        object[] constituentValues = new object[numConstituents];
+                        int[] constituentLines = new int[numConstituents];
+						int[] constituentColumns = new int[numConstituents];
+						for (int i = 0; i < numConstituents; i++) {
+							PartialResult constituent = constituents.Pop();
+							constituentValues[i] = constituent.Value;
+							constituentLines[i] = constituent.LineNumber;
+							constituentColumns[i] = constituent.ColumnNumber;
+						}
+						object result = actions[nextAction.Argument](constituentValues, constituentLines, constituentColumns, userObject);
+						if (numConstituents > 0)
+							resultStack.Push(new PartialResult(result, symbolNames[production.LHSSymbol],
+						                               		   constituentLines[0], constituentColumns[0]));
+						else
+							resultStack.Push(new PartialResult(result, symbolNames[production.LHSSymbol],
+						                               		   nextToken.LineNumber, nextToken.ColumnNumber));
+						
                         stateStack.Push(gotoTable[state, production.LHSSymbol - numTerminals]);
                         state = stateStack.Peek();
 
@@ -134,10 +168,10 @@ namespace YetAnotherParserGenerator
                 throw new ParsingException(string.Format("There are additional symbols in the input string starting with terminal {0}({1}).",
                           symbolNames[nextToken.SymbolCode], nextToken.Value), nextToken.LineNumber, nextToken.ColumnNumber);
             }
-            else if ((treeStack.Count == 1) && (treeStack.Peek().SymbolName == "$start"))
+            else if ((resultStack.Count == 1) && (resultStack.Peek().SymbolName == "$start"))
                 //vše je, jak má být
-                return treeStack.Pop().Daughters[0];
-            else if (treeStack.Count == 0)
+                return resultStack.Pop().Value;
+            else if (resultStack.Count == 0)
             {
                 throw new ParsingException("There were no symbols in the input.",
                     nextToken.LineNumber, nextToken.ColumnNumber);
@@ -146,7 +180,7 @@ namespace YetAnotherParserGenerator
             {
                 //tohle znamená, že parser nebyl ještě se vstupem spokojen a očekává další symboly
                 StringBuilder symbolsOnStack = new StringBuilder();
-                foreach (ParseTree stackItem in treeStack.Reverse())
+                foreach (PartialResult stackItem in resultStack.Reverse())
                 {
                     symbolsOnStack.Append(", ");
                     symbolsOnStack.Append(stackItem.SymbolName);

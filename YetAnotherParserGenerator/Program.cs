@@ -158,7 +158,7 @@ output.";
 		                               bool explicitLogging, bool forceLalr1, string compilerOptions)
         {
             IList<string> warningMessages;
-            Grammar grammar = GrammarParser.ParseGrammar(new StreamReader(inputFile), out warningMessages);
+            Grammar grammar = GrammarParser.ParseGrammar(Path.GetFullPath(inputFile), out warningMessages);
 
             foreach (string warning in warningMessages)
                 Console.Error.WriteLine(warning);
@@ -213,7 +213,7 @@ output.";
             string input = Console.In.ReadToEnd();
             lexer.SourceString = input;
 
-            object result = parser.Parse(lexer);
+            object result = parser.Parse(lexer, null);
             
             Console.WriteLine(result.ToString());
         }

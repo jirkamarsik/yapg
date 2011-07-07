@@ -257,6 +257,14 @@ namespace YetAnotherParserGenerator
 						reportParsingError(string.Format("Unexpected character '{0}' following ':'.", input[position + 1]));
 					}
 					break;
+                case '"':
+                    symbolCode = GrammarParser.CODE_QUOTED;
+                    int endOfQuotes = input.IndexOf('"', position + 1);
+                    if (endOfQuotes == -1)
+                        matchLength = input.Length - position;
+                    else
+                        matchLength = (endOfQuotes + 1) - position;
+                    break;
 				case '(':
 					var match = re_regexOpts.Match(input, position);
 					if (match.Index == position) {
@@ -294,6 +302,9 @@ namespace YetAnotherParserGenerator
 						break;
 					case "type":
 						symbolCode = GrammarParser.CODE_TYPE;
+						break;
+					case "userobject":
+						symbolCode = GrammarParser.CODE_USEROBJECT;
 						break;
 					default:
 						reportParsingError(string.Format("Unknown keyword \"%{0}\".", keyword.Value));

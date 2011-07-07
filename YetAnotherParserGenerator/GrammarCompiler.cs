@@ -1,6 +1,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using Microsoft.CSharp;
@@ -25,9 +26,9 @@ namespace YetAnotherParserGenerator
 				{
 				class ActionCollection
 				{
-				public static Func<object[], int[], int[], object>[] RetrieveCollection()
+				public static System.Func<object[], int[], int[], object, object>[] RetrieveActions()
 				{
-					return new Func<object[], int[], int[], object>[] { ");
+					return new System.Func<object[], int[], int[], object, object>[] { ");
 			
 			for (int i = 0; i < grammar.GrammarCode.ProductionActions.Length; i++) {
 				if (i > 0)
@@ -35,11 +36,11 @@ namespace YetAnotherParserGenerator
 				codeBuilder.Append(string.Format("Action{0}", i));
 			}
 			
-			codeBuilder.Append("}; }");
+			codeBuilder.AppendLine("}; }");
 			
 			for (int i = 0; i < grammar.GrammarCode.ProductionActions.Length; i++) {
 			
-				codeBuilder.Append("public static object Action" + i.ToString() + "(object[] __args, int[] __lines, int[] __columns) {");
+				codeBuilder.AppendLine("public static object Action" + i.ToString() + "(object[] __args, int[] __lines, int[] __columns, object __state) {");
 				
 				for (int j = 0; j < grammar.Productions[i].RHSSymbols.Count; j++) {
 				
@@ -62,32 +63,38 @@ namespace YetAnotherParserGenerator
 					codeBuilder.AppendLine(string.Format("int _column{0} = __columns[{1}];", j + 1, j));
 				}
 				
-				codeBuilder.Append(grammar.GrammarCode.ProductionActions[i]);
+				if (grammar.GrammarCode.UserObjectType != null)
+					codeBuilder.AppendLine(string.Format("{0} _state = ({0}) __state;", grammar.GrammarCode.UserObjectType));
+				else
+					codeBuilder.AppendLine("object _state = __state;");
 				
-				codeBuilder.Append("}");
+				codeBuilder.AppendLine(grammar.GrammarCode.ProductionActions[i]);
+				
+				codeBuilder.AppendLine("}");
 			}
 			
 			// We close our wrapper class and namespace.
 			codeBuilder.Append("} }");
-			
+            
 			
 			CSharpCodeProvider compiler = new CSharpCodeProvider();
 			
 			CompilerParameters cp = new CompilerParameters();
 			cp.GenerateExecutable = false;
-			cp.GenerateInMemory = true;
 			cp.CompilerOptions = compilerOptions;
 			CompilerResults cr = compiler.CompileAssemblyFromSource(cp, codeBuilder.ToString());
 			
-			if (cr.Errors.Count > 0) {
-				List<string> errors = new List<string>();
-				foreach (CompilerError error in cr.Errors)
-					if (!error.IsWarning)
-						errors.Add(error.ToString());
+			List<string> errors = new List<string>();
+			foreach (CompilerError error in cr.Errors)
+				if (!error.IsWarning)
+					errors.Add(error.ToString());
+			
+			if (errors.Count > 0) {
 				throw new InvalidSpecificationException(errors);
 			}
 			
-			grammar.ParserData.ActionAssembly = cr.CompiledAssembly;
+			grammar.ParserData.ActionAssemblyBytes = File.ReadAllBytes(cr.PathToAssembly);
+			File.Delete(cr.PathToAssembly);
 		}
 	}
 }

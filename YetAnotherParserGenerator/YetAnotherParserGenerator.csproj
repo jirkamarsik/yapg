@@ -43,7 +43,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\yapg.xml</DocumentationFile>
     <Externalconsole>true</Externalconsole>
-    <Commandlineparameters>make NewGrammar.txt</Commandlineparameters>
+    <Commandlineparameters>make ../../SpecificationGrammar.txt -c "-r:yapg.exe"</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -76,7 +76,6 @@
     <Compile Include="GrammarParser.cs" />
     <Compile Include="Lexer.cs" />
     <Compile Include="Parser.cs" />
-    <Compile Include="ParseTree.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -111,10 +110,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SpecificationGrammar.txt">
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -132,6 +127,15 @@
   </Target>
   -->
   <ItemGroup>
-    <None Include="SpecificationGrammar2.txt" />
+    <None Include="SpecificationGrammar.txt" />
   </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/plain" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>

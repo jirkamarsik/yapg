@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -141,7 +140,7 @@ namespace YetAnotherParserGenerator
         private int[,] gotoTable;
         private string[] symbolNames;
         private ProductionOutline[] productions;
-        private Assembly actionAssembly;
+        private byte[] actionAssemblyBytes;
         
         /// <summary>
         /// Creates a new instance of ParserData and initializes the properties which can be read
@@ -221,10 +220,10 @@ namespace YetAnotherParserGenerator
         /// <summary>
         /// Gets the compiled assembly containing the code which is run when reducing symbols in the parser.
         /// </summary>
-		public Assembly ActionAssembly
+		public byte[] ActionAssemblyBytes
 		{
-			get { return actionAssembly; }
-			set { actionAssembly = value; }
+			get { return actionAssemblyBytes; }
+			set { actionAssemblyBytes = value; }
 		}
     }
     
@@ -236,12 +235,14 @@ namespace YetAnotherParserGenerator
 		private string headerCode;
 		private string[] productionActions;
 		private string[] nonterminalTypes;
+		private string userObjectType;
 		
-		public GrammarCode(string headerCode, string[] productionActions, string[] nonterminalTypes)
+		public GrammarCode(string headerCode, string[] productionActions, string[] nonterminalTypes, string userObjectType)
 		{
 			this.headerCode = headerCode;
 			this.productionActions = productionActions;
 			this.nonterminalTypes = nonterminalTypes;
+			this.userObjectType = userObjectType;
 		}
 		
 		/// <summary>
@@ -260,6 +261,11 @@ namespace YetAnotherParserGenerator
 		/// The names of types of the values carried by the individual nonterminals.
 		/// </summary>
 		public string[] NonterminalTypes { get { return nonterminalTypes; } }
+		
+		/// <summary>
+		/// The name of the type of the object that is threaded through the parsing.
+		/// </summary>
+		public string UserObjectType { get { return userObjectType; } }
 	}
 
     /// <summary>

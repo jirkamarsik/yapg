@@ -1,33 +1,400 @@
-﻿%null VOID
+﻿%header
 
-(?m)
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using YetAnotherParserGenerator;
 
-DERIVES=::=
-OR=\|
-LANGLE=\<
-RANGLE=\>
-SEMICOLON=;
-REGEXOPTS=\(\?[imnsx\-]+\)
-NULL=(?i)%null\b
-START=(?i)%start\b
-TOKENDEF=\w+=[^\r\n]*
-IDENTIFIER=\w+
-VOID=\s+
-VOID=#.*
+namespace YetAnotherParserGenerator
+{
+    struct GrammarDefinitionAndCode 
+    {
+        public GrammarDefinitionAndCode(GrammarDefinition grammarDefinition, GrammarCode grammarCode) {
+            this.GrammarDefinition = grammarDefinition;
+            this.GrammarCode = grammarCode;
+        }
+        
+        public GrammarDefinition GrammarDefinition;
+        public GrammarCode GrammarCode;
+    }
+    
+    struct TypeAssignment
+    {
+        public TypeAssignment(int symbolCode, string typeName) {
+            this.SymbolCode = symbolCode;
+            this.TypeName = typeName;
+        }
+        
+        public int SymbolCode;
+        public string TypeName;
+    }
+    
+    struct ParserDefs
+    {
+        public List<ProductionWithAction> Productions;
+        public List<TypeAssignment> TypeAssignments;
+    }
+}
 
-%start grammarDef
+%lexer
+# The lexer used will be GrammarLexer, this section is here just to define numbering of the terminals.
+HEADER=     # The keyword %header preceding the user's header code.
+HEADERCODE= # The code to be placed at the top of the generated source.
+LEXER=      # The %lexer keyword which ushers in the token definitions.
+NULL=       # The %null keyword which points to a fictional token's name whose occurences will be ignored
+REGEXOPTS=  # Options to be passed to the RegEx engine.
+IDENTIFIER= # An identifier, either the left-hand side of a token definition, a part of a typename or part of a symbol's name.
+EQUALS=     # An equals sign which separates token names from the regular expressions defining them.
+REGEX=      # A regular expression defining the possible forms of terminal symbols.
+PARSER=     # The %parser keyword which opens the final section of the specification.
+START=      # The %start keyword which is used to denote the initial nonterminal.
+USEROBJECT= # The keyword %userobject which lets the user specify a type for user object passed to all the actions.
+TYPE=       # The keyword %type can be used to specify the type of a nonterminal's computed value.
+DOT=        # The dot separates elements of a type's name.
+QUOTED=     # A quoted typename, necessary if it containts the '<' or '>' characters.
+LANGLE=     # The left angle bracket preceding a nonterminal's name.
+RANGLE=     # The right angle bracket following a nonterminal's name.
+DERIVES=    # The sign which separates the left-hand side and the right-hand side of productions.
+CODE=       # Blocks of C# code which describe the action to happen when a production is applied.
+OR=         # The pipe serves as a separator between possible right-hand sides of productions.
 
-<grammarDef> ::= <nullDef> <regexOpts> <tokenDefs> <startDef> <rules>;
+%parser
+%start <grammar>
+%userobject GrammarParser.GrammarParserLocals
 
-<nullDef> ::= NULL IDENTIFIER | ;
-<regexOpts> ::= REGEXOPTS | ; 
-<tokenDefs> ::= TOKENDEF | TOKENDEF <tokenDefs>;
-<startDef> ::= START IDENTIFIER;
+%type <grammar> Grammar
+<grammar> ::= <header> <initLexer> <lexer> <initParser> <parser>
+        {
+            if (_state.ErrorMessages.Count > 0)
+                throw new InvalidSpecificationException(_state.ErrorMessages.Concat(_state.WarningMessages));
+            
+            return new Grammar(_5.GrammarDefinition, _3, _5.GrammarCode);
+        }
 
-<rules> ::= <rule> | <rule> <rules>;
-<rule> ::= <nonterminal> DERIVES <expression> SEMICOLON;
-<expression> ::= <symbolList> | <symbolList> OR <expression>;
-<symbolList> ::= <symbol> <symbolList> | ;
-<symbol> ::= <nonterminal> | <terminal>;
-<nonterminal> ::= LANGLE IDENTIFIER RANGLE;
-<terminal> ::= IDENTIFIER;
+
+%type <header> string
+<header> ::= HEADER HEADERCODE      { _state.HeaderCode = string.Format("#line {0} \"{1}\"\n{2}\n", _line2, _state.FileName, _2);
+                                      return _state.HeaderCode; }
+           |                        { _state.HeaderCode = "";
+                                      return _state.HeaderCode; }
+
+
+# <initLexer> is an empty nonterminal which reduces and runs the following code
+<initLexer> ::=  {
+                _state.ErrorMessages = new List<string>();
+                _state.SymbolNames = new List<string>();
+                _state.NumTerminals = 0;
+                _state.NullTerminal = null;
+                
+                _state.SymbolNames.Add("$end");
+                _state.NumTerminals++;
+                
+                return null;
+            }
+
+
+%type <nullDef> string
+<nullDef> ::= NULL IDENTIFIER       { _state.NullTerminal = _2;
+                                      return _state.NullTerminal; }
+            |                       { _state.NullTerminal = null;
+                                      return _state.NullTerminal; }
+
+%type <regexOpts> string
+<regexOpts> ::= REGEXOPTS           { return _1; }
+              |                     { return ""; }
+
+%type <tokenDefs> "List<GrammarParser.RegexOccurence>"
+<tokenDefs> ::= <tokenDef>                { var list = new List<GrammarParser.RegexOccurence>();
+                                            list.Add(_1);
+                                            return list; }
+              | <tokenDefs> <tokenDef>    { _1.Add(_2);
+                                            return _1; }
+
+%type <tokenDef> GrammarParser.RegexOccurence
+<tokenDef> ::= IDENTIFIER EQUALS REGEX
+        {
+            GrammarParser.RegexOccurence regex;
+            regex.Regex = _3;
+            regex.LineNumber = _line3;
+            regex.ColumnNumber = _column3;
+            if (_1 == _state.NullTerminal) {
+                regex.SymbolCode = -1;
+            } else {
+                // check if we see the terminal for the first time and if so,
+                // register it
+                if (_state.SymbolNames.IndexOf(_1) == -1) {
+                    _state.SymbolNames.Add(_1);
+                    _state.NumTerminals++;
+                }
+                regex.SymbolCode = _state.SymbolNames.IndexOf(_1);
+            }
+            return regex;
+        }
+
+
+%type <lexer> LexerData
+<lexer> ::= LEXER <nullDef> <regexOpts> <tokenDefs>
+        {
+            StringBuilder pattern = new StringBuilder();
+            Regex regex = null;
+            pattern.Append(_3);
+
+            for (int i = 0; i < _4.Count; i++) {
+                // All of the user-supplied regular expressions are put into capture groups and separated
+                // by the "or" operator. The order of the regular expressions is preserved, this way
+                // the earlier regular expressions have precedence over the latter. The individual capture
+                // groups are named __i, where i is their zero-based index.
+                if (i != 0)
+                    pattern.Append('|');
+                pattern.AppendFormat("(?<{0}>{1})", "__" + i.ToString(), _4[i].Regex);
+            }
+
+            try
+            {
+                regex = new Regex(pattern.ToString(), RegexOptions.Compiled);
+            }
+            catch (ArgumentException)
+            {
+                try
+                {
+                    new Regex(_3);
+                }
+                catch (ArgumentException)
+                {
+                    _state.ErrorMessages.Add(string.Format("{0},{1}: The RegEx options are invalid.", _line3, _column3));
+                }
+
+                for (int i = 0; i < _4.Count; i++)
+                {
+                    try
+                    {
+                        new Regex(_4[i].Regex);
+                    }
+                    catch (ArgumentException)
+                    {
+                        _state.ErrorMessages.Add(string.Format("{0},{1}: This regular expression is invalid.",
+                            _4[i].LineNumber, _4[i].ColumnNumber));
+                    }
+                }
+            }
+            
+            List<int> groupSymbolCodes = _4.Select(x => x.SymbolCode).ToList();
+            return new LexerData(regex, groupSymbolCodes);
+        }
+
+
+# <initParser> is a fake nonterminal used to trigger the execution of the following code
+<initParser> ::=
+    {
+        // The following 3 values allow us to help the user diagnose typos and errors
+        // in his grammar.
+        
+        // the nonterminals which have appeared on the left-hand side of a production
+        _state.ExpandableNonterminals = new HashSet<int>();
+        // the nonterminals which have appeared on the right-hand side of a production
+        _state.UsedNonterminals = new HashSet<int>();
+        // checks whether we have used a terminal in a production
+        _state.TerminalUsed = new bool[_state.NumTerminals];
+
+
+        _state.SymbolNames.Add("$start");
+        // <$start> is a special nonterminal we do not want to see on the right-hand
+        // side of any rule, so we make it exempt from the UsedNonterminals check
+        _state.UsedNonterminals.Add(_state.SymbolNames.IndexOf("$start"));
+        
+        return null;
+    }
+
+%type <startDef> int
+<startDef> ::= START <nonterminal>          { return _2; }
+
+%type <userObjectTypeDef> string
+<userObjectTypeDef> ::= USEROBJECT <typeName>   { _state.UserObjectType = _2;
+                                                  return _state.UserObjectType; }
+                      |                         { _state.UserObjectType = null;
+                                                  return _state.UserObjectType; }
+
+
+%type <typeAssignment> TypeAssignment
+<typeAssignment> ::= TYPE <nonterminal> <typeName>  { return new TypeAssignment(_2, _3); }
+
+%type <typeName> string
+<typeName> ::= IDENTIFIER <specificName>
+                    { return string.Format("\n#line {0} \"{1}\"\n{2}{3}\n",
+                        _line1, _state.FileName, new string(' ', _column1 - 1), _1 + _2); }
+             | QUOTED
+                    { return string.Format("\n#line {0} \"{1}\"\n{2}{3}\n",
+                        _line1, _state.FileName, new string(' ', _column1 - 1), _1.Substring(1, _1.Length - 2)); }
+
+%type <specificName> string
+<specificName> ::= DOT IDENTIFIER <specificName>    { return _1 + _2 + _3; }
+                 |                                  { return ""; }
+
+
+%type <production> "List<ProductionWithAction>"
+<production> ::= <nonterminal> DERIVES <rightHandSides>
+    {   
+        if (!_state.ExpandableNonterminals.Contains(_1))
+            _state.ExpandableNonterminals.Add(_1);
+        
+        // We fill in the missing left-hand side symbol in the productions.
+        foreach (var production in _3) {
+            production.Production.LHSSymbol = _1;
+        }
+        return _3;
+    }
+
+%type <rightHandSides> "List<ProductionWithAction>"
+<rightHandSides> ::= <rightHandSides> OR <rightHandSide>    { _1.Add(_3);
+                                                              return _1; }
+                   | <rightHandSide>                        { var list = new List<ProductionWithAction>();
+                                                              list.Add(_1);
+                                                              return list; }
+
+%type <rightHandSide> ProductionWithAction
+<rightHandSide> ::= <symbolList> CODE
+    {
+        string codeWithGuides = string.Format("\n#line {0} \"{1}\"\n{2}{3}\n",
+                                    _line2, _state.FileName, new string(' ', _column2 - 1), _2);
+        
+        foreach (var symbol in _1)
+            if ((symbol >= _state.NumTerminals) && !_state.UsedNonterminals.Contains(symbol))
+                _state.UsedNonterminals.Add(symbol);
+    
+        // We leave the left-hand side symbol as -1 and we fill it when we connect
+        // this right-hand side with the left-hand side.
+        return new ProductionWithAction(new Production(-1, _1), codeWithGuides);
+    }
+
+%type <symbolList> "List<int>"
+<symbolList> ::= <symbolList> <symbol>      { _1.Add(_2);
+                                              return _1; }
+               |                            { return new List<int>(); }
+
+%type <symbol> int
+<symbol> ::= <nonterminal>      { return _1; }
+           | <terminal>         { return _1; }
+
+%type <nonterminal> int
+<nonterminal> ::= LANGLE IDENTIFIER RANGLE
+    {
+        int symbolCode = _state.SymbolNames.IndexOf(_2);
+        
+        if (symbolCode == -1) {
+            _state.SymbolNames.Add(_2);
+            symbolCode = _state.SymbolNames.IndexOf(_2);
+        } else if (symbolCode < _state.NumTerminals)
+            _state.ErrorMessages.Add(string.Format("{0},{1}: The nonterminal <{2}> shares it's name with a terminal symbol.",
+                                                   _line1, _column1, _2));
+
+        if (!_state.UsedNonterminals.Contains(symbolCode))
+            _state.UsedNonterminals.Add(symbolCode); 
+        
+        return symbolCode;
+    }
+
+%type <terminal> int
+<terminal> ::= IDENTIFIER
+    {
+        int symbolCode = _state.SymbolNames.IndexOf(_1);
+        if (symbolCode == -1)
+            _state.ErrorMessages.Add(string.Format("{0},{1}: The terminal '{2}' is used but not defined.",
+                                                   _line1, _column1, _1));
+        else
+            _state.TerminalUsed[symbolCode] = true;
+        return symbolCode;
+    }
+
+
+%type <parserDefs> ParserDefs
+<parserDefs> ::= <parserDefs> <production>      { _1.Productions.AddRange(_2);
+                                                  return _1; }
+               | <parserDefs> <typeAssignment>  { _1.TypeAssignments.Add(_2);
+                                                  return _1; }
+               |                                { ParserDefs parserDefs;
+                                                  parserDefs.Productions = new List<ProductionWithAction>();
+                                                  parserDefs.TypeAssignments = new List<TypeAssignment>();
+                                                  return parserDefs; }
+
+
+%type <parser> GrammarDefinitionAndCode
+<parser> ::= PARSER <startDef> <userObjectTypeDef> <parserDefs>
+    {
+        // We will be adding one extra production whose left-hand side and right-hand side
+        // symbols we account for now before checking for mistakes in the grammar.
+        _state.ExpandableNonterminals.Add(_state.SymbolNames.IndexOf("$start"));
+        _state.UsedNonterminals.Add(_2);
+        _state.TerminalUsed[_state.SymbolNames.IndexOf("$end")] = true;
+        
+        // We use the data we have gathered to identify unexpandable nonterminals and nonreachable nonterminals
+        // and terminals. Note: The ToArray is called in order to evaluate the lazy Intersect method so that
+        // we will not break because of the changes in UsedNonterminals and ExpandableNonterminals in the next steps.
+        int[] okayNonterminals = _state.UsedNonterminals.Intersect(_state.ExpandableNonterminals).ToArray();
+        _state.UsedNonterminals.ExceptWith(okayNonterminals);
+        _state.ExpandableNonterminals.ExceptWith(okayNonterminals);
+
+        foreach (int nonterminal in _state.UsedNonterminals)
+            _state.WarningMessages.Add(string.Format(
+                "Warning: The nonterminal <{0}> isn't expandable.", _state.SymbolNames[nonterminal]));
+        
+        foreach (int nonterminal in _state.ExpandableNonterminals)
+            _state.WarningMessages.Add(string.Format(
+                "Warning: The nonterminal <{0}> is defined but never used.", _state.SymbolNames[nonterminal]));
+
+        for (int terminal = 0; terminal < _state.NumTerminals; terminal++)
+            if (!_state.TerminalUsed[terminal])
+                _state.WarningMessages.Add(string.Format(
+                    "Warning: The terminal '{0}' is defined but never used.", _state.SymbolNames[terminal]));
+
+
+        // We sort the productions by the left-hand side nonterminal and separate the productions
+        // themselves from the associated actions.
+        Production[] productionsArray = new Production[_4.Productions.Count + 1];
+        string[] actions = new string[productionsArray.Length];
+        
+        productionsArray[0] = new Production(
+                _state.SymbolNames.IndexOf("$start"), new int[] { _2, _state.SymbolNames.IndexOf("$end") });
+        productionsArray[0].ProductionCode = 0;
+        actions[0] = "{ return _1; }";
+        
+        IEnumerable<ProductionWithAction> sortedProductions = _4.Productions.OrderBy(prod => prod.Production.LHSSymbol);
+
+        int k = 1;
+        foreach (ProductionWithAction productionWithAction in sortedProductions)
+        {
+            productionsArray[k] = productionWithAction.Production;
+            productionsArray[k].ProductionCode = k;
+            actions[k] = productionWithAction.Action;
+            k++;
+        }
+        
+
+        // For each nonterminal we find the span of productions with it on the left-hand side.
+        int numNonterminals = _state.SymbolNames.Count - _state.NumTerminals;
+        int[] nonterminalProductionOffset = new int[numNonterminals + 1];
+
+        int offset = 0;
+        for (int nonterminal = 0; nonterminal < numNonterminals; nonterminal++) {
+            nonterminalProductionOffset[nonterminal] = offset;
+            while ((offset < productionsArray.Length) &&
+                (productionsArray[offset].LHSSymbol == _state.NumTerminals + nonterminal))
+                offset++;
+        }
+        nonterminalProductionOffset[nonterminalProductionOffset.Length - 1] = offset;
+        
+        
+        string[] nonterminalTypes = new string[numNonterminals];
+        foreach (var typeAssignment in _4.TypeAssignments) {
+            nonterminalTypes[typeAssignment.SymbolCode - _state.NumTerminals] = typeAssignment.TypeName;
+        }
+        
+        
+        GrammarDefinitionAndCode grammarDefinitionAndCode;
+        grammarDefinitionAndCode.GrammarDefinition = new GrammarDefinition(_state.SymbolNames.ToArray(),
+                productionsArray, nonterminalProductionOffset, _state.NumTerminals);
+        grammarDefinitionAndCode.GrammarCode = new GrammarCode(_state.HeaderCode, actions, nonterminalTypes,
+                _state.UserObjectType);
+        return grammarDefinitionAndCode;
+    }

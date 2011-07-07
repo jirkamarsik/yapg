@@ -15,16 +15,52 @@ namespace YetAnotherParserGenerator
     {
         // Symbol codes for the various tokens used by the GrammarLexer
 		// and the GrammarParser.
-		internal static readonly int CODE_SKIP = -1, CODE_END = 0, CODE_HEADER = 1,
-			CODE_HEADERCODE = 2, CODE_LEXER = 3, CODE_NULL = 4, CODE_IDENTIFIER = 5,
-			CODE_REGEXOPTS = 6, CODE_EQUALS = 7, CODE_REGEX = 8, CODE_PARSER = 9,
-			CODE_START = 10, CODE_TYPE = 11, CODE_DOT = 12, CODE_LANGLE = 13,
-			CODE_RANGLE = 14, CODE_DERIVES = 15, CODE_CODE = 16, CODE_OR = 17;
+        internal static readonly int CODE_SKIP = -1, CODE_END = 0, CODE_HEADER = 1, CODE_HEADERCODE = 2,
+            CODE_LEXER = 3, CODE_NULL = 4, CODE_REGEXOPTS = 5, CODE_IDENTIFIER = 6, CODE_EQUALS = 7,
+            CODE_REGEX = 8, CODE_PARSER = 9, CODE_START = 10, CODE_USEROBJECT = 11, CODE_TYPE = 12,
+            CODE_DOT = 13, CODE_QUOTED = 14, CODE_LANGLE = 15, CODE_RANGLE = 16, CODE_DERIVES = 17,
+            CODE_CODE = 18, CODE_OR = 19;
+            
+        public struct RegexOccurence
+        {
+            public string Regex;
+            public int SymbolCode;
+            public int LineNumber;
+            public int ColumnNumber;
+        }
+        
+        public class GrammarParserLocals
+        {
+            public GrammarParserLocals(string fileName, out IList<string> warningMessages) {
+                this.FileName = fileName;
+                this.WarningMessages = new List<string>();
+                warningMessages = this.WarningMessages;
+            }
+            
+            public IList<string> WarningMessages;
+            public IList<string> ErrorMessages;
+            
+            public string FileName;
+            
+            public string HeaderCode;
+            
+            public List<string> SymbolNames;
+            public int NumTerminals;
+            
+            public string NullTerminal;
+            
+            public string UserObjectType;
+            
+            public HashSet<int> ExpandableNonterminals;
+            public HashSet<int> UsedNonterminals;
+            public bool[] TerminalUsed;
+        }
 		
-		public static Grammar ParseGrammar(TextReader input, out IList<string> warningMessages)
+		public static Grammar ParseGrammar(string specificationPath, out IList<string> warningMessages)
 		{
+#if BOOTSTRAP      
             GrammarLexer lexer = new GrammarLexer();
-			lexer.SourceString = input.ReadToEnd();
+            lexer.SourceString = File.ReadAllText(specificationPath);
 			Token token = lexer.GetNextToken();
 
             //sem si budeme ukládat chyby a warningy; pokud se vyskytne nějaká chyba, čteme dál a 
@@ -55,7 +91,7 @@ namespace YetAnotherParserGenerator
             List<int> groupSymbolCodes = new List<int>();
             //výsledný regulární výraz, pomocí kterého lexer scanuje tokeny; druhá část runtime dat pro náš lexer
             Regex regex = null;
-
+            
             //jméno pseudoterminálu, jehož tokeny se nemají posílat parseru, ale zahazovat
             string nullTerminal = "";
             //globální optiony .NETímu regex stroji (case insensitive, multiline...)
@@ -139,7 +175,7 @@ namespace YetAnotherParserGenerator
                 }
                 catch (ArgumentException)
                 {
-                	// FIXME: We no longer have the line and columnd data on regexOpts.
+                	// FIXME: We no longer have the line and column data on regexOpts.
                     errorMessages.Add(string.Format("{0},{1}: The RegEx options are invalid.", -1, -1));
                 }
 
@@ -168,8 +204,6 @@ namespace YetAnotherParserGenerator
             HashSet<int> usedNonterminals = new HashSet<int>();
 
             bool[] terminalUsed = new bool[numTerminals];
-            //
-            terminalUsed[0] = true;
 
             List<ProductionWithAction> productions = new List<ProductionWithAction>();
 
@@ -198,10 +232,33 @@ namespace YetAnotherParserGenerator
             symbolNames.Add(startSymbol);
             symbolCodes[startSymbol] = symbolNames.Count - 1;
 
+			
+			string userObjectType = null;
+			
+			if (token.SymbolCode == CODE_USEROBJECT) {
+			
+				token = lexer.GetNextToken();
+				
+                if (token.SymbolCode == CODE_QUOTED) {
+                    userObjectType = token.Value.Substring(1, token.Value.Length - 2);
+                    token = lexer.GetNextToken();
+                } else {
+    				StringBuilder typeBuilder = new StringBuilder(token.Value);
+    				token = lexer.GetNextToken();
+    				while (token.SymbolCode == CODE_DOT) {
+    					typeBuilder.Append(".");
+    					token = lexer.GetNextToken();
+    					typeBuilder.Append(token.Value);
+    					token = lexer.GetNextToken();
+    				}
+    				
+    				userObjectType = typeBuilder.ToString();
+                }            
+			}
 
             //naše 0. pravidlo, které výstižně popisuje způsob, jakým si gramatiku upravujeme
             productions.Add(new ProductionWithAction(new Production(
-                0, symbolCodes["$start"], new int[] { symbolCodes[startSymbol], symbolCodes["$end"] }), "{ return _1; }"));
+                symbolCodes["$start"], new int[] { symbolCodes[startSymbol], symbolCodes["$end"] }), "{ return _1; }"));
 
             reducibleNonterminals.Add(symbolCodes["$start"]);
             usedNonterminals.Add(symbolCodes[startSymbol]);
@@ -233,17 +290,24 @@ namespace YetAnotherParserGenerator
                     token = lexer.GetNextToken();
                     // skipping RANGLE
 					token = lexer.GetNextToken();
-					
-					StringBuilder typeBuilder = new StringBuilder(token.Value);
-					token = lexer.GetNextToken();
-					while (token.SymbolCode == CODE_DOT) {
-						typeBuilder.Append(".");
-						token = lexer.GetNextToken();
-						typeBuilder.Append(token.Value);
-						token = lexer.GetNextToken();
-					}
-					
-					typeMappings.Add(nonterminal, typeBuilder.ToString());
+                    
+                    if (token.SymbolCode == CODE_QUOTED) {
+                        // QUOTED
+                        typeMappings.Add(nonterminal, token.Value.Substring(1, token.Value.Length - 2));
+                        token = lexer.GetNextToken();
+                    }
+                    else {
+    					StringBuilder typeBuilder = new StringBuilder(token.Value);
+    					token = lexer.GetNextToken();
+    					while (token.SymbolCode == CODE_DOT) {
+    						typeBuilder.Append(".");
+    						token = lexer.GetNextToken();
+    						typeBuilder.Append(token.Value);
+    						token = lexer.GetNextToken();
+    					}
+    					
+    					typeMappings.Add(nonterminal, typeBuilder.ToString());
+                    }
 					
 				} else {
 	
@@ -333,8 +397,7 @@ namespace YetAnotherParserGenerator
 						string code = token.Value;
 						token = lexer.GetNextToken();
 	
-	                    productions.Add(new ProductionWithAction(
-							new Production(productions.Count, lhsSymbolCode, rhsSymbols), code));
+                        productions.Add(new ProductionWithAction(new Production(lhsSymbolCode, rhsSymbols), code));
 	                }
 				}
             }
@@ -401,10 +464,24 @@ namespace YetAnotherParserGenerator
             //a teď už to jen zabalíme a pošleme
             GrammarDefinition grammarDefinition = new GrammarDefinition(symbolNames.ToArray(), productionsArray, nonterminalProductionOffset, numTerminals);
             LexerData lexerData = new LexerData(regex, groupSymbolCodes);
-            GrammarCode grammarCode = new GrammarCode(headerCode, actions, nonterminalTypes);
+            GrammarCode grammarCode = new GrammarCode(headerCode, actions, nonterminalTypes, userObjectType);
             Grammar grammar = new Grammar(grammarDefinition, lexerData, grammarCode);
 
             return grammar;
+#else
+            LexerData lexerData;
+            ParserData parserData;
+            Grammar.ReadRuntimeDataFromStream(
+                new MemoryStream(YetAnotherParserGenerator.Properties.Resources.SpecificationGrammar),
+                out lexerData, out parserData);
+            
+            GrammarLexer lexer = new GrammarLexer();
+            Parser parser = new Parser(parserData);
+            
+            GrammarParserLocals locals = new GrammarParserLocals(specificationPath, out warningMessages);
+            lexer.SourceString = File.ReadAllText(specificationPath);
+            return (Grammar)parser.Parse(lexer, locals);
+#endif
 		}
     }
 }

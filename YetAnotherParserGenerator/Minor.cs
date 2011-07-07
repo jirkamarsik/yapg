@@ -83,11 +83,9 @@ namespace YetAnotherParserGenerator
         /// <summary>
         /// Creates a production with an empty right-hand side.
         /// </summary>
-        /// <param name="productionCode">The ordinal code of the production.</param>
         /// <param name="lhsSymbol">The left-hand side symbol's code.</param>
-        public Production(int productionCode, int lhsSymbol)
+        public Production(int lhsSymbol)
         {
-            this.productionCode = productionCode;
             this.lhsSymbol = lhsSymbol;
             this.rhsSymbols = new List<int>();
         }
@@ -95,12 +93,10 @@ namespace YetAnotherParserGenerator
         /// <summary>
         /// Creates a complete from the specified parameters.
         /// </summary>
-        /// <param name="productionCode">The ordinal code of the production.</param>
         /// <param name="lhsSymbol">The left-hand side symbol's code.</param>
         /// <param name="rhsSymbols">The collection whose elements will form the right-hand side of the production.</param>
-        public Production(int productionCode, int lhsSymbol, IEnumerable<int> rhsSymbols)
+        public Production(int lhsSymbol, IEnumerable<int> rhsSymbols)
         {
-            this.productionCode = productionCode;
             this.lhsSymbol = lhsSymbol;
             this.rhsSymbols = new List<int>(rhsSymbols);
         }
@@ -113,7 +109,7 @@ namespace YetAnotherParserGenerator
         /// <summary>
         /// Gets the left-hand side symbol's code.
         /// </summary>
-        public int LHSSymbol { get { return lhsSymbol; } }
+        public int LHSSymbol { get { return lhsSymbol; } set { lhsSymbol = value; } }
 
         /// <summary>
         /// Gets the right-hand side symbols' codes of the production.
