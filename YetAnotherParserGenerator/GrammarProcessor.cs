@@ -39,14 +39,14 @@ namespace YetAnotherParserGenerator
         /// Represents a general graph oracle.
         /// </summary>
         /// <typeparam name="TVertex">The type representing a vertex of the graph.</typeparam>
-        abstract class EdgeOracle<TVertex>
+        interface EdgeOracle<TVertex>
         {
             /// <summary>
             /// Gets the neighbours of the vertex <i>v</i>.
             /// </summary>
             /// <param name="v">The vertex whose neighbours are to be found.</param>
             /// <returns>The neighbours of <i>v</i>.</returns>
-            abstract public IEnumerable<TVertex> GetNeighboursFor(TVertex v);
+            IEnumerable<TVertex> GetNeighboursFor(TVertex v);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace YetAnotherParserGenerator
             /// </summary>
             /// <param name="trans">The NonterminalTransition whose neighbours in <i>reads</i> are to be found.</param>
             /// <returns>The neighbours of <i>trans</i> in the <i>reads</i> relation.</returns>
-            public override IEnumerable<NonterminalTransition> GetNeighboursFor(NonterminalTransition trans)
+            public IEnumerable<NonterminalTransition> GetNeighboursFor(NonterminalTransition trans)
             {
                 State nextState = trans.Destination;
                 foreach (Transition nextTrans in nextState.Transitions)
@@ -116,7 +116,7 @@ namespace YetAnotherParserGenerator
             /// </summary>
             /// <param name="trans">The NonterminalTransition whose neighbours in <i>includes</i> are to be found.</param>
             /// <returns>The neighbours of <i>trans</i> in the <i>includes</i> relation.</returns>
-            public override IEnumerable<NonterminalTransition> GetNeighboursFor(NonterminalTransition trans)
+            public IEnumerable<NonterminalTransition> GetNeighboursFor(NonterminalTransition trans)
             {
                 //budou nás zajímat všechny itemy tvaru:
                 //<A> ::= *k symbolů* trans.TransitionSymbol . *nulovatelné neterminály*;
@@ -217,7 +217,7 @@ namespace YetAnotherParserGenerator
             /// </summary>
             /// <param name="nonterminal">The nonterminal whose neighbours in <i>follows</i> are to be found.</param>
             /// <returns>The neighbours of <i>nonterminal</i> in the <i>follows</i> relation.</returns>
-            public override IEnumerable<int> GetNeighboursFor(int nonterminal)
+            public IEnumerable<int> GetNeighboursFor(int nonterminal)
             {
                 //jednodušše se u každého přepisovacího pravidla, kde se nonterminal vyskytuje na pravé straně
                 //podíváme, zda-li je následován pouze nulovatelnými neterminály

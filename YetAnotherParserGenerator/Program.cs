@@ -30,7 +30,7 @@ options for the C# compiler can be given via the '-c' option.
 
 'yapg run' reads the binary runtime data of a parser from parserFile and
 then expects input from the standard input stream. After it has received
-all the input, it will parse it and write the parsing results to the standard
+all the input, it will parse it and write the results to the standard
 output.";
 
         /// <summary>
