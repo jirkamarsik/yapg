@@ -1,4 +1,4 @@
-﻿%header
+%header
 
 using System;
 using System.Collections.Generic;
@@ -75,7 +75,7 @@ OR=         # The pipe serves as a separator between possible right-hand sides o
 
 
 %type <header> string
-<header> ::= HEADER HEADERCODE      { _state.HeaderCode = string.Format("#line {0} \"{1}\"\n{2}\n", _line2, _state.FileName, _2);
+<header> ::= HEADER HEADERCODE      { _state.HeaderCode = string.Format("#line {0} \"{1}\"\n{2} ", _line2, _state.FileName, _2);
                                       return _state.HeaderCode; }
            |                        { _state.HeaderCode = "";
                                       return _state.HeaderCode; }
@@ -211,10 +211,8 @@ OR=         # The pipe serves as a separator between possible right-hand sides o
 <startDef> ::= START <nonterminal>          { return _2; }
 
 %type <userObjectTypeDef> string
-<userObjectTypeDef> ::= USEROBJECT <typeName>   { _state.UserObjectType = _2;
-                                                  return _state.UserObjectType; }
-                      |                         { _state.UserObjectType = null;
-                                                  return _state.UserObjectType; }
+<userObjectTypeDef> ::= USEROBJECT <typeName>   { return _2; }
+                      |                         { return null; }
 
 
 %type <typeAssignment> TypeAssignment
@@ -222,11 +220,11 @@ OR=         # The pipe serves as a separator between possible right-hand sides o
 
 %type <typeName> string
 <typeName> ::= IDENTIFIER <specificName>
-                    { return string.Format("\n#line {0} \"{1}\"\n{2}{3}\n",
+                    { return string.Format("\n#line {0} \"{1}\"\n{2}{3} ",
                         _line1, _state.FileName, new string(' ', _column1 - 1), _1 + _2); }
              | QUOTED
-                    { return string.Format("\n#line {0} \"{1}\"\n{2}{3}\n",
-                        _line1, _state.FileName, new string(' ', _column1 - 1), _1.Substring(1, _1.Length - 2)); }
+                    { return string.Format("\n#line {0} \"{1}\"\n{2}{3} ",
+                        _line1, _state.FileName, new string(' ', _column1 - 1 + 1), _1.Substring(1, _1.Length - 2)); }
 
 %type <specificName> string
 <specificName> ::= DOT IDENTIFIER <specificName>    { return _1 + _2 + _3; }
@@ -256,7 +254,7 @@ OR=         # The pipe serves as a separator between possible right-hand sides o
 %type <rightHandSide> ProductionWithAction
 <rightHandSide> ::= <symbolList> CODE
     {
-        string codeWithGuides = string.Format("\n#line {0} \"{1}\"\n{2}{3}\n",
+        string codeWithGuides = string.Format("\n#line {0} \"{1}\"\n{2}{3} ",
                                     _line2, _state.FileName, new string(' ', _column2 - 1), _2);
         
         foreach (var symbol in _1)
@@ -394,7 +392,6 @@ OR=         # The pipe serves as a separator between possible right-hand sides o
         GrammarDefinitionAndCode grammarDefinitionAndCode;
         grammarDefinitionAndCode.GrammarDefinition = new GrammarDefinition(_state.SymbolNames.ToArray(),
                 productionsArray, nonterminalProductionOffset, _state.NumTerminals);
-        grammarDefinitionAndCode.GrammarCode = new GrammarCode(_state.HeaderCode, actions, nonterminalTypes,
-                _state.UserObjectType);
+        grammarDefinitionAndCode.GrammarCode = new GrammarCode(_state.HeaderCode, actions, nonterminalTypes, _3);
         return grammarDefinitionAndCode;
     }

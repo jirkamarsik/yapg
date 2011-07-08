@@ -68,7 +68,7 @@ namespace YetAnotherParserGenerator
 				else
 					codeBuilder.AppendLine("object _state = __state;");
 				
-				codeBuilder.AppendLine(grammar.GrammarCode.ProductionActions[i]);
+				codeBuilder.Append(grammar.GrammarCode.ProductionActions[i]);
 				
 				codeBuilder.AppendLine("}");
 			}

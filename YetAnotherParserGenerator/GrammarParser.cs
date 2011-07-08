@@ -49,8 +49,6 @@ namespace YetAnotherParserGenerator
             
             public string NullTerminal;
             
-            public string UserObjectType;
-            
             public HashSet<int> ExpandableNonterminals;
             public HashSet<int> UsedNonterminals;
             public bool[] TerminalUsed;
